@@ -55,13 +55,16 @@ const td = buildTurndown();
 
 /**
  * Strip invisible/zero-width characters commonly injected by email clients
- * as preheader spacers: ZWNJ, ZWJ, ZWSP, soft hyphen, BOM, word joiner, etc.
+ * as preheader spacers: ZWNJ, ZWJ, ZWSP, soft hyphen, BOM, word joiner,
+ * figure space (U+2007), combining grapheme joiner (U+034F), etc.
+ * Also normalises runs of blank lines and trims trailing whitespace.
  */
 function stripInvisible(text: string): string {
   return text
-    .replace(/\u00AD|\u034F|\u200B|\u200C|\u200D|\u2060|\uFEFF/g, "")
+    .replace(/\u00AD|\u034F|\u200B|\u200C|\u200D|\u2007|\u2060|\uFEFF/g, "")
     .replace(/[ \t]{2,}/g, " ")
-    .replace(/^\s+/gm, "")
+    .replace(/^\s+$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
