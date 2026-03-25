@@ -2,7 +2,7 @@
 issue: ADR-006
 title: SMTP Client — Send, Reply, Forward
 branch: feat/smtp-client
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 6
