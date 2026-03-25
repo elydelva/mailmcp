@@ -53,6 +53,15 @@ function buildTurndown(): TurndownService {
 
 const td = buildTurndown();
 
+/**
+ * Strip invisible/zero-width characters commonly injected by email clients
+ * as preheader spacers: ZWNJ, ZWJ, ZWSP, soft hyphen, BOM, word joiner, etc.
+ */
+function stripInvisible(text: string): string {
+  // biome-ignore lint/suspicious/noMisleadingCharacterClass: intentional unicode range
+  return text.replace(/[\u00AD\u200B\u200C\u200D\u2060\uFEFF]+/g, "").trim();
+}
+
 export function toMarkdown(html: string): string {
-  return td.turndown(html).trim();
+  return stripInvisible(td.turndown(html));
 }

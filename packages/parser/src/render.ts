@@ -25,11 +25,21 @@ export interface RenderedEmail {
 export async function renderEmail(rawMime: string): Promise<RenderedEmail> {
   const parsed = await parseMime(rawMime);
 
+  /**
+   * Minimum length (chars) for a readability-extracted markdown to be considered
+   * useful. Below this threshold the extraction likely returned only a footer or
+   * navigation block; we fall back to the decoded text/plain part instead.
+   */
+  const MIN_MARKDOWN_LENGTH = 120;
+
   let markdown = "";
 
   if (parsed.html) {
     const { html: cleanHtml } = extractContent(parsed.html);
-    markdown = toMarkdown(cleanHtml);
+    const candidate = toMarkdown(cleanHtml);
+    if (candidate.length >= MIN_MARKDOWN_LENGTH) {
+      markdown = candidate;
+    }
   }
 
   return {
