@@ -2,9 +2,9 @@
 issue: ADR-005
 title: IMAP Client & Connection Pool
 branch: feat/imap-client
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 18
+pr_url: https://github.com/elydelva/mailmcp/pull/18
 github_issue: 5
 github_issue_url: https://github.com/elydelva/mailmcp/issues/5
 depends_on: [ADR-004, ADR-010]

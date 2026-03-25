@@ -2,9 +2,9 @@
 issue: ADR-006
 title: SMTP Client — Send, Reply, Forward
 branch: feat/smtp-client
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 19
+pr_url: https://github.com/elydelva/mailmcp/pull/19
 github_issue: 6
 github_issue_url: https://github.com/elydelva/mailmcp/issues/6
 depends_on: [ADR-010]

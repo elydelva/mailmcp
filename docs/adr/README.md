@@ -12,8 +12,8 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-002](ADR-002-storage-postgres.md) | Storage — PostgreSQL Backend | `core` | todo |
 | [ADR-003](ADR-003-oauth-endpoints.md) | OAuth 2.1 Endpoints | `server` | todo |
 | [ADR-004](ADR-004-provider-detection.md) | Provider Detection | `core` | completed |
-| [ADR-005](ADR-005-imap-client.md) | IMAP Client & Connection Pool | `core` | todo |
-| [ADR-006](ADR-006-smtp-client.md) | SMTP Client | `core` | todo |
+| [ADR-005](ADR-005-imap-client.md) | IMAP Client & Connection Pool | `core` | completed |
+| [ADR-006](ADR-006-smtp-client.md) | SMTP Client | `core` | completed |
 | [ADR-007](ADR-007-mcp-tools-accounts.md) | MCP Tools — Account Management | `core` + `server` | todo |
 | [ADR-008](ADR-008-mcp-tools-email.md) | MCP Tools — Email Operations | `core` + `server` | todo |
 | [ADR-009](ADR-009-docker-deployment.md) | Docker & Production Deployment | `server` | todo |
