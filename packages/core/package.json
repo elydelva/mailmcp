@@ -16,7 +16,8 @@
     "drizzle-orm": "^0.45.1",
     "imapflow": "^1.2.17",
     "lowdb": "^7.0.1",
-    "nodemailer": "^8.0.4"
+    "nodemailer": "^8.0.4",
+    "postgres": "^3.4.5"
   },
   "devDependencies": {
     "@types/nodemailer": "^7.0.11",

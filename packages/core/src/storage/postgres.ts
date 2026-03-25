@@ -1,6 +1,6 @@
-import { SQL } from "bun";
 import { and, eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/bun-sql";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { encrypt } from "../password.js";
 import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
 import { emailAccounts, users } from "./schema.js";
@@ -11,7 +11,7 @@ export class PostgresStorageAdapter implements StorageAdapter {
   private readonly db: DrizzleDb;
 
   constructor(connectionString: string, _db?: DrizzleDb) {
-    this.db = _db ?? drizzle(new SQL(connectionString));
+    this.db = _db ?? drizzle(postgres(connectionString));
   }
 
   // ── Users ──────────────────────────────────────────────────────────────────

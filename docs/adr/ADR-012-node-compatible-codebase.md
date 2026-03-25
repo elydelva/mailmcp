@@ -8,7 +8,7 @@ pr_url: ~
 github_issue: ~
 github_issue_url: ~
 depends_on: [ADR-010, ADR-011]
-required_by: []
+required_by: [ADR-013]
 ---
 
 # ADR-012 — Node.js-compatible codebase — Bun as runtime only

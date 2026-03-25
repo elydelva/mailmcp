@@ -20,6 +20,7 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-010](ADR-010-monorepo-architecture.md) | Monorepo Architecture | — | completed |
 | [ADR-011](ADR-011-cli-workspace.md) | CLI Companion & Workspace System | `mailmcp` | completed |
 | [ADR-012](ADR-012-node-compatible-codebase.md) | Node.js-compatible codebase — Bun as runtime only | `core` + `mailmcp` | todo |
+| [ADR-013](ADR-013-typescript-project-references.md) | TypeScript project references — monorepo typecheck scalability | — | todo |
 
 ---
 
@@ -58,7 +59,8 @@ ADR-001 ──┼──► ADR-010 ──┬──► ADR-002 ──┐
 | ADR-009 | ADR-010, ADR-003 | — |
 | ADR-010 | ADR-001 | ADR-002, ADR-003, ADR-004, ADR-005, ADR-006, ADR-007, ADR-008, ADR-009, ADR-011 |
 | ADR-011 | ADR-010, ADR-004, ADR-007 | — |
-| ADR-012 | ADR-010, ADR-011 | — |
+| ADR-012 | ADR-010, ADR-011 | ADR-013 |
+| ADR-013 | ADR-012 | — |
 
 ---
 
