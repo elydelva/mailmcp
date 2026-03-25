@@ -11,6 +11,8 @@ pr: ~
 pr_url: ~
 github_issue: ~
 github_issue_url: ~
+depends_on: []          # ADRs that must be completed before this one starts
+required_by: []         # ADRs that cannot start until this one is completed
 ---
 
 ## Context
