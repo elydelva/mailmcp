@@ -87,6 +87,11 @@ async function testSmtp(
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function normalizeError(err: unknown): string {
-  if (err instanceof Error) return err.message;
+  if (err instanceof Error) {
+    if ("responseText" in err && typeof err.responseText === "string" && err.responseText) {
+      return err.responseText;
+    }
+    return err.message;
+  }
   return String(err);
 }

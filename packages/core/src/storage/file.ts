@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { JSONFilePreset } from "lowdb/node";
-import { encrypt } from "./crypto.js";
+import { encrypt } from "../password.js";
 import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
 
 interface DbSchema {

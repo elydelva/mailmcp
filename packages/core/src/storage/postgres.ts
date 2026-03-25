@@ -1,6 +1,7 @@
 import { SQL } from "bun";
 import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/bun-sql";
+import { encrypt } from "../password.js";
 import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
 import { emailAccounts, users } from "./schema.js";
 
@@ -68,7 +69,7 @@ export class PostgresStorageAdapter implements StorageAdapter {
         smtpPort: data.smtpPort,
         smtpSecure: data.smtpSecure,
         username: data.username,
-        passwordEnc: Buffer.from(data.password).toString("base64"),
+        passwordEnc: encrypt(data.password),
         isDefault: isFirst,
       })
       .returning();
@@ -94,7 +95,7 @@ export class PostgresStorageAdapter implements StorageAdapter {
     if (data.smtpSecure !== undefined) updates.smtpSecure = data.smtpSecure;
     if (data.username !== undefined) updates.username = data.username;
     if (data.password !== undefined) {
-      updates.passwordEnc = Buffer.from(data.password).toString("base64");
+      updates.passwordEnc = encrypt(data.password);
     }
 
     const updated = await this.db

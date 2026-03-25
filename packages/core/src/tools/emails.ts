@@ -9,6 +9,7 @@ import {
 } from "../imap/operations.js";
 import type { ImapPool } from "../imap/pool.js";
 import { imapPool } from "../imap/pool.js";
+import { decryptToString } from "../password.js";
 import type { AttachmentInput } from "../smtp/operations.js";
 import {
   forwardEmail as smtpForwardEmail,
@@ -35,7 +36,7 @@ async function resolveAccount(ctx: ToolContext, accountId?: string) {
     ? accounts.find((a) => a.id === accountId)
     : (accounts.find((a) => a.isDefault) ?? accounts[0]);
   if (!account) throw new Error("No account configured");
-  const password = Buffer.from(account.passwordEnc, "base64").toString("utf-8");
+  const password = decryptToString(account.passwordEnc);
   return { account, password };
 }
 

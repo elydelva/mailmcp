@@ -81,8 +81,6 @@ export async function setupAccount(
       throw new Error(`Connection test failed: IMAP: ${imapErr}; SMTP: ${smtpErr}`);
     }
 
-    const encodedPassword = Buffer.from(params.password).toString("base64");
-
     const account = await ctx.storage.createAccount(ctx.userId, {
       name: params.name ?? config.name,
       email: params.email,
@@ -94,7 +92,7 @@ export async function setupAccount(
       smtpPort: config.smtp.port,
       smtpSecure: config.smtp.secure,
       username: params.email,
-      password: encodedPassword,
+      password: params.password,
     });
 
     return {

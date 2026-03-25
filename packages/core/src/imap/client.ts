@@ -19,5 +19,6 @@ export function createImapClient(account: EmailAccount, password: string): ImapF
       pass: password,
     },
     logger: false,
+    logRaw: false,
   });
 }
