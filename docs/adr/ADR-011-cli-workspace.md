@@ -2,7 +2,7 @@
 issue: ADR-011
 title: CLI Companion & Workspace System
 branch: feat/cli-workspace
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: ~
