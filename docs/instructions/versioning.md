@@ -2,7 +2,9 @@
 
 Versioning is fully automated via **Conventional Commits** + **release-please**.
 
-## Commit format (enforced by Husky + commitlint)
+## Commit format
+
+Enforced by Husky + commitlint on every commit:
 
 ```
 <type>(<scope>): <description>
@@ -18,23 +20,29 @@ Versioning is fully automated via **Conventional Commits** + **release-please**.
 | `refactor`, `test`, `ci`, `chore` | — | hidden |
 | `feat!` / `BREAKING CHANGE:` | **major** | yes |
 
+**Rules:**
+- Subject must be lower-case (enforced by commitlint `subject-case`).
+- Use the imperative mood: "add", "fix", "remove" — not "added", "fixes".
+- Scope is the package or module name: `(imap)`, `(auth)`, `(server)`, `(core)`.
+
 Examples:
 ```
 feat(auth): add OAuth 2.1 PKCE flow
 fix(imap): handle connection timeout gracefully
 feat!: drop Node.js support — Bun only
+chore(ci): add release-please workflow
 ```
 
 ## Release pipeline
 
 1. Each merge to `main` triggers the `release-please` workflow.
-2. release-please maintains a **"Release PR"** that bumps `package.json` and updates `CHANGELOG.md`.
-3. Merging the Release PR creates the GitHub Release and Git tag.
-4. The tag triggers the Docker publish job in `release-please.yml`.
+2. release-please maintains a **Release PR** that bumps `package.json` and updates `CHANGELOG.md`.
+3. Merging the Release PR creates the GitHub Release and the git tag.
+4. The tag triggers the Docker publish job.
 
 ## CI Docker images
 
 | Event | Image tag |
 |-------|-----------|
-| Push to `main` | `ghcr.io/<org>/mailmcp:main`, `:sha-<sha>` |
+| Push to `main` | `ghcr.io/<org>/<repo>:main`, `:<sha>` |
 | Release tag | `:1.2.3`, `:1.2`, `:1`, `:latest` |

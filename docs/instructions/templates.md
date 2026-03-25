@@ -1,48 +1,47 @@
-# Templates — Utilisation
+# Templates
 
-Les templates pour issues et PRs sont dans `docs/templates/`.
+Issue and PR templates live in `docs/templates/`.
 
 ```
 docs/templates/
   issues/
-    bug.md       ← signalement d'un bug
-    feature.md   ← demande de fonctionnalité / nouveau ADR
+    bug.md       ← unexpected behavior / regression
+    feature.md   ← new work linked to an ADR or feature
   pr/
-    bugfix.md    ← PR corrigeant un bug
-    feature.md   ← PR implémentant un ADR / feature
+    bugfix.md    ← PR fixing a bug
+    feature.md   ← PR implementing an ADR or feature
 ```
 
-## Quand utiliser quel template
+## Which template to use
 
 | Situation | Template |
 |-----------|---------|
-| Comportement inattendu / régresssion | `issues/bug.md` |
-| Nouveau travail lié à un ADR ou feature | `issues/feature.md` |
-| PR corrigeant un bug (issue de type bug) | `pr/bugfix.md` |
-| PR implémentant un ADR ou feature | `pr/feature.md` |
+| Unexpected behavior or regression | `issues/bug.md` |
+| New work linked to an ADR or feature | `issues/feature.md` |
+| PR fixing a bug | `pr/bugfix.md` |
+| PR implementing an ADR or feature | `pr/feature.md` |
 
-## Comment créer une issue avec le template
+## Creating an issue from a template
 
 ```sh
-# Copier le template, l'éditer, puis créer l'issue
 gh issue create --title "ADR-00X — …" --body-file docs/templates/issues/feature.md
 ```
 
-## Comment créer une PR avec le template
+## Creating a PR from a template
 
-Le titre suit le format `[TYPE/Nom de la feature]` — voir [`github-sync.md`](./github-sync.md#nommage-des-prs).
+PR titles follow the `[TYPE/Feature Name]` format — see [`github-sync.md`](./github-sync.md#pr-title-format).
 
 ```sh
-# Draft PR dès le premier commit significatif
+# Open a Draft PR as soon as the branch has a first meaningful commit
 gh pr create --draft \
-  --title "[FEAT/Storage] Implémentation du backend fichier avec chiffrement AES-256" \
+  --title "[FEAT/Auth] Add OAuth 2.1 PKCE flow" \
   --body-file docs/templates/pr/feature.md \
   --base main
 
-# Convertir en PR normale quand prête
+# Promote to ready when the work is complete
 gh pr ready <number>
 ```
 
-## Règle générale
+## General rule
 
-Les templates sont des points de départ — adapter le contenu au contexte réel. Ne pas laisser de sections vides avec leur placeholder : soit les remplir, soit les supprimer.
+Templates are starting points — adapt the content to the actual context. Remove any section that does not apply rather than leaving empty placeholders.

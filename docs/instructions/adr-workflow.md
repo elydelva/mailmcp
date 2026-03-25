@@ -3,7 +3,9 @@
 Each ADR in `docs/adr/` maps to a GitHub Issue and (eventually) a PR.
 Apply these rules **every time** work touches an ADR.
 
-## Frontmatter (required on every ADR)
+## Frontmatter
+
+Every ADR file must include this YAML frontmatter:
 
 ```yaml
 ---
@@ -12,32 +14,32 @@ title: …
 branch: …               # feature branch name
 status: todo            # see lifecycle below
 pr: ~                   # GitHub PR number, or ~ if not yet opened
-pr_url: ~               # https://github.com/elydelva/mailmcp/pull/<n>
-github_issue: ~         # GitHub Issue number, or ~ if not yet created
-github_issue_url: ~     # https://github.com/elydelva/mailmcp/issues/<n>
-depends_on: []          # ADRs that must be completed before this one can start
+pr_url: ~               # full URL to the PR, or ~
+github_issue: ~         # GitHub Issue number, or ~
+github_issue_url: ~     # full URL to the issue, or ~
+depends_on: []          # ADRs that must be completed before this one starts
 required_by: []         # ADRs that cannot start until this one is completed
 ---
 ```
 
-## Dépendances entre ADRs
+## Dependencies
 
-Les champs `depends_on` et `required_by` forment un graphe orienté acyclique qui définit l'ordre d'implémentation.
+The `depends_on` / `required_by` fields form a directed acyclic graph that defines implementation order.
 
-**Règle** : un ADR ne peut passer à `in-progress` que si tous ses `depends_on` sont à `completed`.
+**Rule:** an ADR may only move to `in-progress` once all its `depends_on` entries are `completed`.
 
-Le graphe complet et l'ordre d'implémentation recommandé sont maintenus dans [`docs/adr/README.md`](../adr/README.md).
+The full graph and recommended implementation order are maintained in [`docs/adr/README.md`](../adr/README.md).
 
-Quand on écrit ou modifie un ADR :
-1. Renseigner `depends_on` avec les ADRs dont la complétion est un prérequis.
-2. Mettre à jour `required_by` sur chacun des ADRs listés dans `depends_on` (relation symétrique).
-3. Mettre à jour la table de dépendances et l'ordre dans `docs/adr/README.md`.
+When writing or modifying an ADR:
+1. Set `depends_on` to every ADR whose completion is a prerequisite.
+2. Add this ADR to `required_by` on each of those dependency ADRs (symmetric relation).
+3. Update the dependency table and implementation order in `docs/adr/README.md`.
 
-## Lifecycle — keep `status` up to date
+## Lifecycle
 
 | Status | When to set it |
-|--------|---------------|
-| `todo` | ADR written but work not started |
+|--------|----------------|
+| `todo` | ADR written, work not yet started |
 | `in-progress` | Branch created / work begun |
 | `completed` | PR merged to `main` |
 | `abandoned` | Decision dropped — add an `## Abandonment` section explaining why |
@@ -47,7 +49,7 @@ Quand on écrit ou modifie un ADR :
 1. **Starting work** — set `status: in-progress`, create the GitHub Issue if absent, fill `github_issue` + `github_issue_url`.
 2. **Opening a PR** — fill `pr` + `pr_url`, add `Closes #<github_issue>` in the PR body so GitHub auto-links it.
 3. **PR merged** — set `status: completed`.
-4. **Work dropped** — set `status: abandoned`, add `## Abandonment` section with the reason.
+4. **Work dropped** — set `status: abandoned`, add an `## Abandonment` section with the reason.
 5. **Keep `docs/adr/README.md` in sync** — the status column must always match the frontmatter.
 6. Never leave `pr`, `pr_url`, `github_issue`, or `github_issue_url` blank — use `~` (YAML null) when unknown.
 

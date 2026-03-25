@@ -15,5 +15,5 @@ Full documentation for each topic lives in `docs/instructions/`. Always consult 
 | Conventional commits, versioning, releases, CI | @docs/instructions/versioning.md |
 | ADR workflow (status, PR/issue linking, rules) | @docs/instructions/adr-workflow.md |
 | ADR template (canonical structure for new ADRs) | @docs/instructions/adr-template.md |
-| GitHub sync — principe, quand & comment synchroniser | @docs/instructions/github-sync.md |
-| Templates issues & PRs — utilisation | @docs/instructions/templates.md |
+| GitHub sync — when and how to sync with GitHub | @docs/instructions/github-sync.md |
+| Issue & PR templates — usage | @docs/instructions/templates.md |

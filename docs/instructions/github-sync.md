@@ -1,60 +1,60 @@
-# GitHub Sync — Principe & Workflow
+# GitHub Sync
 
-## Source de vérité : le dépôt git
+## Git is the source of truth
 
-À l'ère de l'IA, **le dépôt git est la seule source de vérité fiable** :
+In an AI-assisted workflow, **the git repository is the only reliable source of truth**:
 
-- Les commits, branches et tags sont immuables et vérifiables.
-- Les ADRs (`docs/adr/`) documentent les décisions architecturales de façon durable.
-- Les messages de commit (Conventional Commits) constituent le changelog vivant.
+- Commits, branches, and tags are immutable and auditable.
+- ADRs (`docs/adr/`) record architectural decisions durably.
+- Commit messages (Conventional Commits) form the living changelog.
 
-GitHub Issues et PRs sont une **couche UX** par-dessus git. Ils peuvent être supprimés, archivés, ou devenir obsolètes. Ne jamais leur faire confiance pour du contexte critique — ce contexte doit vivre dans les commits ou les ADRs.
+GitHub Issues and PRs are a **UX layer** on top of git. They can be deleted, archived, or become stale. Never rely on them for critical context — that context belongs in commits or ADRs.
 
-## Pourquoi on sync quand même
+## Why sync at all
 
-GitHub offre une interface de collaboration précieuse : revue de code, discussion, signalement de WIP via les Draft PRs, lien visuel entre issues et PRs. On en profite, sans en dépendre.
+GitHub provides valuable collaboration tooling: code review, discussion threads, WIP signaling via Draft PRs, and visual traceability between issues and PRs. We use it, without depending on it.
 
-## Quand synchroniser
+## When to sync
 
-| Moment | Action GitHub |
-|--------|--------------|
-| Démarrage du travail sur un ADR | Ouvrir l'issue correspondante si elle n'existe pas encore |
-| Début du développement actif | Ouvrir une **Draft PR** depuis la branche, liée à l'issue (`Closes #N`) |
-| Prêt pour review | Marquer la Draft PR comme **Ready for review** |
-| PR mergée | L'issue se ferme automatiquement via `Closes #N` |
-| Travail abandonné | Fermer l'issue manuellement avec un commentaire bref, mettre `status: abandoned` dans l'ADR |
+| Moment | GitHub action |
+|--------|---------------|
+| Starting work on an ADR | Open the corresponding issue if it does not exist |
+| First significant commit on the branch | Open a **Draft PR** linked to the issue (`Closes #N`) |
+| Ready for review | Mark the Draft PR as **Ready for review** |
+| PR merged | Issue closes automatically via `Closes #N` |
+| Work dropped | Close the issue manually with a brief comment; set `status: abandoned` in the ADR |
 
-## Draft PR — signal de WIP
+## Draft PRs as WIP signals
 
-Ouvrir une Draft PR **dès que la branche a un premier commit significatif**, même si le travail n'est pas terminé. C'est un signal :
-- pour les collaborateurs (humains ou IA) que ce travail est en cours,
-- pour garder la traçabilité entre branche et issue visible dans l'interface GitHub.
+Open a Draft PR **as soon as the branch has a first meaningful commit**, even if work is unfinished. It signals:
+- to collaborators (human or AI) that this work is in progress,
+- traceability between the branch and the issue is visible in the GitHub UI.
 
-Une Draft PR ne déclenche pas de review requests. La convertir en PR normale quand le travail est prêt.
+Draft PRs do not trigger review requests. Convert to a regular PR when the work is ready.
 
-## Nommage des PRs
+## PR title format
 
-Le titre d'une PR **n'est pas** un message de commit. Il doit être lisible par un humain qui parcourt la liste des PRs, pas par un parser de changelog.
+A PR title is **not** a commit message. It must be readable by a human scanning the PR list, not parsed by a changelog tool.
 
-Format : `[TYPE/Nom de la feature]` suivi d'une courte phrase en langage naturel.
+Format: `[TYPE/Feature Name]` followed by a short human-readable sentence.
 
 ```
-[FEAT/Storage]    Implémentation du backend fichier avec chiffrement AES-256
-[FIX/IMAP]        Correction du timeout de connexion sur les serveurs lents
-[DOCS/ADR]        Workflow ADR, templates et hub d'instructions IA
-[CHORE/CI]        Découplage SonarCloud et publication GHCR
+[FEAT/Auth]       Add OAuth 2.1 PKCE flow
+[FIX/IMAP]        Handle connection timeout on slow servers
+[DOCS/ADR]        ADR workflow, templates, and AI instruction hub
+[CHORE/CI]        Decouple SonarCloud scanning and GHCR publishing
 ```
 
-Types disponibles : `FEAT`, `FIX`, `DOCS`, `CHORE`, `REFACTOR`, `PERF`, `TEST`
+Available types: `FEAT`, `FIX`, `DOCS`, `CHORE`, `REFACTOR`, `PERF`, `TEST`
 
-> Les Conventional Commits restent dans les messages de commit — ils alimentent le changelog automatique.
-> Le titre de PR, lui, sert la lisibilité humaine dans l'interface GitHub.
+> Conventional Commits belong in individual commit messages — they feed the automated changelog.
+> PR titles serve human readability in the GitHub interface.
 
-## Comment synchroniser (règles concrètes)
+## Sync checklist
 
-1. **Nommer la PR** selon le format `[TYPE/Nom]` décrit ci-dessus — jamais comme un commit.
-2. **Toujours lier** une PR à son issue avec `Closes #<N>` dans le corps de la PR.
-3. **Toujours renseigner** `pr`, `pr_url`, `github_issue`, `github_issue_url` dans le frontmatter de l'ADR correspondant (voir [`adr-workflow.md`](./adr-workflow.md)).
-4. **Utiliser les templates** de `docs/templates/` pour ouvrir issues et PRs (voir [`templates.md`](./templates.md)).
-5. **Ne pas dupliquer le contexte** : le corps d'une issue ou PR peut résumer, mais la décision technique durable doit être dans l'ADR ou le commit.
-6. **Ne pas bloquer sur GitHub** : si l'interface est inaccessible, le travail continue — git suffit. La sync se fait a posteriori.
+1. **Name the PR** using the `[TYPE/Name]` format above — never like a commit message.
+2. **Always link** a PR to its issue with `Closes #<N>` in the PR body.
+3. **Always fill** `pr`, `pr_url`, `github_issue`, `github_issue_url` in the corresponding ADR frontmatter (see [`adr-workflow.md`](./adr-workflow.md)).
+4. **Use the templates** in `docs/templates/` when opening issues or PRs (see [`templates.md`](./templates.md)).
+5. **Do not duplicate context** — a PR or issue body may summarize, but durable technical decisions live in the ADR or commit.
+6. **Never block on GitHub** — if the interface is unavailable, work continues; sync can happen after the fact.

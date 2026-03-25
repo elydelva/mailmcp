@@ -1,33 +1,33 @@
-## Comportement observé
+## Observed behavior
 
-<!-- Décris ce qui se passe actuellement. -->
+<!-- What is currently happening? -->
 
-## Comportement attendu
+## Expected behavior
 
-<!-- Décris ce qui devrait se passer. -->
+<!-- What should happen instead? -->
 
-## Étapes pour reproduire
+## Steps to reproduce
 
 1.
 2.
 3.
 
-## Environnement
+## Environment
 
-- OS :
-- Version / commit :
-- Commande exécutée :
+- OS:
+- Version / commit:
+- Command executed:
 
 ## Logs / stack trace
 
 ```
-<!-- Coller ici les logs ou l'erreur. -->
+<!-- Paste logs or error output here. -->
 ```
 
 ## Impact
 
-<!-- Bloquant / majeur / mineur ? Qui est affecté ? -->
+<!-- Blocking / major / minor? Who is affected? -->
 
-## Contexte additionnel
+## Additional context
 
-<!-- Tout ce qui peut aider : PR liée, ADR concerné, screenshot, etc. -->
+<!-- Anything that may help: related PR, ADR reference, screenshot, etc. -->
