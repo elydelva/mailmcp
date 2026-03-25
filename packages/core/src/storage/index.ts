@@ -10,7 +10,9 @@ import { FileStorageAdapter } from "./file.js";
 import type { StorageAdapter } from "./interface.js";
 import { PostgresStorageAdapter } from "./postgres.js";
 
+export { decrypt, encrypt } from "../password.js";
 export type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
+export { initEncryptionKey } from "./key.js";
 export { runMigrations } from "./migrate.js";
 export { PostgresStorageAdapter } from "./postgres.js";
 

@@ -9,7 +9,7 @@
  * tables, the same way production code does.
  */
 
-import { beforeEach, describe, expect, test } from "bun:test";
+import { beforeAll, beforeEach, describe, expect, test } from "bun:test";
 import type { CreateAccountInput } from "./interface.js";
 import { PostgresStorageAdapter } from "./postgres.js";
 
@@ -237,6 +237,10 @@ describe("PostgresStorageAdapter", () => {
   let db: ReturnType<typeof makeDb>;
   let adapter: PostgresStorageAdapter;
 
+  beforeAll(() => {
+    process.env.ENCRYPTION_KEY = "a".repeat(64);
+  });
+
   beforeEach(() => {
     db = makeDb();
     // biome-ignore lint/suspicious/noExplicitAny: intentional mock injection
@@ -260,10 +264,12 @@ describe("PostgresStorageAdapter", () => {
   });
 
   describe("createAccount", () => {
-    test("stores account with base64-encoded password", async () => {
+    test("stores account with encrypted password", async () => {
       const user = await adapter.findOrCreateUser("sub-1");
       const account = await adapter.createAccount(user.id, sampleAccountData);
-      expect(account.passwordEnc).toBe(Buffer.from("secret").toString("base64"));
+      expect(account.passwordEnc).not.toBe("secret");
+      expect(account.passwordEnc).not.toBe(Buffer.from("secret").toString("base64"));
+      expect(account.passwordEnc.length).toBeGreaterThan(0);
       expect(account.userId).toBe(user.id);
       expect(account.name).toBe("Work");
     });
