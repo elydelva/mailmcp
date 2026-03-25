@@ -1,0 +1,44 @@
+name: CodeRabbit Review
+
+# Not triggered automatically — run manually or by adding the "coderabbit"
+# label to a pull request.
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "Pull request number to review"
+        required: true
+        type: number
+  pull_request:
+    types: [labeled]
+
+jobs:
+  coderabbit:
+    name: Trigger CodeRabbit Review
+    runs-on: ubuntu-latest
+    # For label trigger: only run when the exact label "coderabbit" is added.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.label.name == 'coderabbit')
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Resolve PR number
+        id: pr
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "number=${{ inputs.pr_number }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Post @coderabbitai review comment
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.pr.outputs.number }},
+              body: "@coderabbitai review",
+            });
