@@ -1,5 +1,21 @@
 {
-  "entry": ["src/index.ts"],
   "project": ["src/**/*.ts"],
-  "ignoreDependencies": ["bun-types"]
+  "ignoreDependencies": [
+    "@fastify/cors",
+    "@fastify/helmet",
+    "@sinclair/typebox",
+    "@types/nodemailer",
+    "imapflow",
+    "nodemailer"
+  ],
+  "ignore": [
+    "src/auth/**",
+    "src/config.ts",
+    "src/imap/**",
+    "src/providers/**",
+    "src/smtp/**",
+    "src/storage/postgres.ts",
+    "src/tools/**"
+  ],
+  "ignoreExportsUsedInFile": true
 }

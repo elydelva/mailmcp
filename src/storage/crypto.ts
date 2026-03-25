@@ -31,7 +31,10 @@ export function encrypt(plaintext: string): string {
   return Buffer.concat([iv, tag, encrypted]).toString("base64");
 }
 
-/** Decrypts a base64 blob produced by {@link encrypt}. */
+/**
+ * Decrypts a base64 blob produced by {@link encrypt}.
+ * @public — consumed by IMAP/SMTP clients to retrieve plaintext passwords.
+ */
 export function decrypt(encoded: string): string {
   const key = getKey();
   const buf = Buffer.from(encoded, "base64");
