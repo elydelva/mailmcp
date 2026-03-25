@@ -1,35 +1,134 @@
 # mailmcp
 
-> A self-hosted MCP server that gives AI assistants full access to your email — securely, privately, and without vendor lock-in.
+> A self-hosted MCP server that gives Claude full access to your email — without handing credentials to anyone.
 
-## What is this?
+Works with Gmail, iCloud, Outlook, Yahoo, Fastmail, Proton Mail Bridge, and any standard IMAP/SMTP provider.  
+Compatible with **Claude.ai** (web & mobile), **Claude Desktop**, and **Claude Code**.
 
-**mailmcp** is a [Model Context Protocol](https://modelcontextprotocol.io) server for email. It connects Claude (and any MCP-compatible AI client) to your existing email accounts via IMAP/SMTP, exposing them as structured tools.
+---
 
-Works with Gmail, iCloud, Outlook, Yahoo, Fastmail, Proton Mail Bridge, and any standard IMAP/SMTP provider.
+## Install — server mode (multi-user, VPS)
 
-## Why?
+You need: a server with Docker + Docker Compose, three DNS records pointing to it, and a Let's Encrypt-compatible email.
 
-Most AI email integrations are cloud-hosted, tied to a single provider, or require handing over OAuth tokens to a third party. mailmcp runs **on your own infrastructure** — a VPS, a home server, anywhere Docker runs.
+**1. Clone and configure**
 
-- Your credentials never leave your server
-- Works with any IMAP/SMTP provider, not just the big ones
-- Multi-account and multi-user out of the box
-- Compatible with Claude.ai (web & mobile), Claude Desktop, and Claude Code
+```bash
+git clone https://github.com/elydelva/mailmcp
+cd mailmcp
+cp .env.example .env
+```
 
-## Features
+Edit `.env`:
 
-- **Smart setup wizard** — add an email account by just typing your address; provider config is detected automatically via DNS lookups and Mozilla Autoconfig
-- **Full email operations** — read, search, send, reply, forward, move, delete, mark, batch actions
-- **OAuth 2.1** — full spec compliance (PKCE, DCR, opaque tokens) via [Ory Hydra](https://www.ory.sh/hydra/)
-- **Two storage backends** — PostgreSQL for production, JSON file for solo/dev use
-- **Connection pooling** — IMAP connections are reused, not re-established on every request
-- **Deploy in one command** — single `docker compose up`
+```env
+POSTGRES_PASSWORD=<strong password>
+MCP_DOMAIN=mail.example.com        # your server's MCP endpoint
+HYDRA_DOMAIN=auth.example.com      # OAuth server
+AUTH_UI_DOMAIN=login.example.com   # login/consent UI
+ACME_EMAIL=you@example.com         # Let's Encrypt notifications
+HYDRA_SECRET=<openssl rand -hex 32>
+```
+
+**2. Start the stack**
+
+```bash
+docker compose up -d
+```
+
+This starts mailmcp + Ory Hydra (OAuth) + login UI + Postgres + Traefik (TLS). Certificates are provisioned automatically.
+
+**3. Add to Claude**
+
+In Claude → Settings → Integrations → Add MCP server:
+
+```
+https://mail.example.com
+```
+
+Claude will walk you through OAuth. Once connected, run:
+
+```
+Set up my email account
+```
+
+Claude will call `setup_account` — your address is detected automatically, and your password is entered locally via the CLI wizard (never sent through Claude).
+
+---
+
+## Install — local mode (single user, no server)
+
+No Docker, no OAuth. Runs directly on your machine.
+
+**1. Install**
+
+```bash
+bun install -g mailmcp
+# or for one-off use:
+bunx mailmcp setup
+```
+
+**2. Add your email account**
+
+```bash
+mailmcp setup
+```
+
+The wizard asks for your provider, email, and app password. IMAP/SMTP settings are detected automatically.
+
+**3. Configure Claude Desktop**
+
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "mail": { "command": "mailmcp", "args": ["--mcp"] }
+  }
+}
+```
+
+Restart Claude Desktop. That's it.
+
+---
+
+## Managing accounts
+
+```bash
+mailmcp accounts               # list configured accounts
+mailmcp accounts remove <email>
+mailmcp status                 # health check
+```
+
+For multiple servers or contexts:
+
+```bash
+mailmcp workspace list
+mailmcp workspace use home
+mailmcp workspace add work https://mail.work.example.com
+```
+
+---
+
+## What Claude can do with your email
+
+| Ask Claude to… | Tool used |
+|---|---|
+| "Show my unread emails" | `list_emails` |
+| "Read the thread with Alice" | `get_thread` |
+| "Search for invoices from last month" | `search_emails` |
+| "Reply to Bob's message" | `reply_email` |
+| "Send a draft to the team" | `send_email` |
+| "Move all newsletters to Archives" | `batch_move` |
+| "Delete emails older than 6 months" | `batch_delete` |
+| "Mark everything from GitHub as read" | `batch_mark` |
+
+---
 
 ## Supported providers
 
 | Provider | Auto-detected |
-|----------|:---:|
+|---|:---:|
 | Gmail | ✅ |
 | iCloud Mail | ✅ |
 | Outlook / Hotmail | ✅ |
@@ -39,64 +138,14 @@ Most AI email integrations are cloud-hosted, tied to a single provider, or requi
 | Proton Mail (Bridge) | ✅ |
 | Any IMAP/SMTP server | ✅ (DNS lookup) |
 
-## Quick start
+For Gmail and other providers that require it, use an **app password**, not your main account password.
 
-```bash
-cp .env.example .env
-# Fill in ENCRYPTION_KEY, HYDRA_SECRET, POSTGRES_PASSWORD, domain names
-docker compose up -d
-```
+---
 
-Then add `https://your-domain.com` as a remote MCP server in Claude.
+## More
 
-See [docs/adr/ADR-009-docker-deployment.md](docs/adr/ADR-009-docker-deployment.md) for the full deployment guide.
-
-## Architecture
-
-```
-Claude.ai / Claude Desktop / Claude Code
-          │
-          │ HTTPS — MCP over SSE / Streamable HTTP
-          ▼
-    mailmcp server          (Fastify + @getlarge/fastify-mcp)
-          │
-          ├── OAuth 2.1     /.well-known, DCR proxy → Ory Hydra
-          ├── MCP tools     list/read/search/send/reply/move/delete...
-          └── Storage       PostgreSQL (Drizzle) or JSON file (lowdb)
-                │
-                └── Email providers via IMAP + SMTP
-```
-
-## MCP tools exposed
-
-| Category | Tools |
-|----------|-------|
-| Account setup | `setup_account`, `list_accounts`, `delete_account`, `set_default_account` |
-| Reading | `list_emails`, `get_email`, `get_thread`, `list_folders` |
-| Search | `search_emails` |
-| Sending | `send_email`, `reply_email`, `forward_email` |
-| Actions | `move_email`, `delete_email`, `mark_email` |
-| Batch | `batch_move`, `batch_delete`, `batch_mark` |
-
-## Development
-
-```bash
-bun install
-cp .env.example .env
-bun run dev
-```
-
-```bash
-bun run typecheck   # TypeScript strict check
-bun run lint        # Biome linter
-bun run format      # Biome formatter
-bun run knip        # Dead code detection
-bun test            # Test suite
-```
-
-## Issue roadmap
-
-Implementation is tracked as ADRs in [`docs/adr/`](docs/adr/). Each ADR maps to a branch with commit-sized goals.
+- [Architecture & design decisions](ARCHITECTURE.md)
+- [Contributing / development setup](CONTRIBUTING.md)
 
 ## License
 
