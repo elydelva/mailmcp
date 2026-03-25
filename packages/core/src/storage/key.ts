@@ -1,4 +1,5 @@
 import { randomBytes } from "node:crypto";
+import { access, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 const KEY_FILE = ".encryption_key";
@@ -18,10 +19,12 @@ export async function initEncryptionKey(dataDir: string): Promise<void> {
   if (process.env.ENCRYPTION_KEY) return;
 
   const keyPath = join(dataDir, KEY_FILE);
-  const file = Bun.file(keyPath);
 
-  if (await file.exists()) {
-    const key = (await file.text()).trim();
+  const exists = await access(keyPath)
+    .then(() => true)
+    .catch(() => false);
+  if (exists) {
+    const key = (await readFile(keyPath, "utf8")).trim();
     if (key.length === 64) {
       process.env.ENCRYPTION_KEY = key;
       return;
@@ -29,6 +32,6 @@ export async function initEncryptionKey(dataDir: string): Promise<void> {
   }
 
   const key = randomBytes(32).toString("hex");
-  await Bun.write(keyPath, key);
+  await writeFile(keyPath, key, "utf8");
   process.env.ENCRYPTION_KEY = key;
 }

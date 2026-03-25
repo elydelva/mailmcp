@@ -1,4 +1,4 @@
-import { mkdirSync } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 
@@ -36,11 +36,8 @@ export function configPath(): string {
 
 export async function readConfig(): Promise<WorkspaceConfig> {
   const path = configPath();
-  const file = Bun.file(path);
-  const exists = await file.exists();
-  if (!exists) return structuredClone(DEFAULT_CONFIG);
   try {
-    const text = await file.text();
+    const text = await readFile(path, "utf8");
     return JSON.parse(text) as WorkspaceConfig;
   } catch {
     return structuredClone(DEFAULT_CONFIG);
@@ -49,8 +46,8 @@ export async function readConfig(): Promise<WorkspaceConfig> {
 
 export async function writeConfig(config: WorkspaceConfig): Promise<void> {
   const path = configPath();
-  mkdirSync(dirname(path), { recursive: true });
-  await Bun.write(path, JSON.stringify(config, null, 2));
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, JSON.stringify(config, null, 2), "utf8");
 }
 
 export async function getActiveWorkspace(
