@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.2](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.2.1...mailmcp-monorepo-v0.2.2) (2026-03-25)
+
+
+### Bug Fixes
+
+* **docker:** copy all workspace package manifests before bun install ([b391fe2](https://github.com/elydelva/mailmcp/commit/b391fe2cfadf207b25bb4e02b3078c0b7d24cf4a))
+* **docker:** copy imap, smtp, tools sources for bun build ([db0fa5c](https://github.com/elydelva/mailmcp/commit/db0fa5c8207e9e632ce2ff2358e0d8acfe5ffc54))
+
 ## [0.2.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.2.0...mailmcp-monorepo-v0.2.1) (2026-03-25)
 
 
