@@ -156,7 +156,17 @@ export async function listEmails(
   const pool = _deps.pool ?? ctx.imapPool ?? imapPool;
   const client = await pool.getClient(ctx.userId, account, password);
   const emails = await imapListEmails(client, mailbox, { page, limit, returnBody });
-  return { emails };
+  if (!returnBody) return { emails };
+
+  const rendered = await Promise.all(
+    emails.map(async (email) => {
+      if (!email.source) return email;
+      const r = await renderEmail(email.source);
+      const { source: _source, ...rest } = email;
+      return { ...rest, markdown: r.markdown, plainText: r.plainText };
+    }),
+  );
+  return { emails: rendered };
 }
 
 export async function getEmail(ctx: ToolContext, params: GetEmailParams, _deps: EmailDeps = {}) {

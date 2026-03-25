@@ -17,7 +17,8 @@ export interface EmailSummary {
   date: Date;
   read: boolean;
   flagged: boolean;
-  bodyText?: string;
+  /** Raw RFC822 source — present when listEmails is called with returnBody:true */
+  source?: string;
 }
 
 export interface AttachmentInfo {
@@ -30,6 +31,8 @@ export interface EmailMessage extends EmailSummary {
   body: string;
   html?: string;
   attachments: AttachmentInfo[];
+  /** Full RFC822 raw MIME source — present when fetched via getEmail(). */
+  source?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -92,7 +95,7 @@ export async function listEmails(
     uid: true,
     flags: true,
     envelope: true,
-    ...(returnBody ? { bodyParts: ["1"] as string[] } : {}),
+    ...(returnBody ? { source: true } : {}),
   };
 
   const start = (page - 1) * limit + 1;
@@ -104,7 +107,9 @@ export async function listEmails(
   try {
     for await (const msg of client.fetch(range, fetchQuery)) {
       const envelope = msg.envelope;
-      const bodyText = returnBody ? msg.bodyParts?.get("1")?.toString("utf-8") : undefined;
+      const source = returnBody
+        ? (msg as unknown as { source?: Buffer }).source?.toString("utf-8")
+        : undefined;
 
       results.push({
         uid: msg.uid,
@@ -113,7 +118,7 @@ export async function listEmails(
         date: envelope?.date instanceof Date ? envelope.date : new Date(envelope?.date ?? 0),
         read: msg.flags?.has("\\Seen") ?? false,
         flagged: msg.flags?.has("\\Flagged") ?? false,
-        ...(bodyText !== undefined ? { bodyText } : {}),
+        ...(source !== undefined ? { source } : {}),
       });
     }
   } catch (err) {
@@ -142,6 +147,7 @@ export async function getEmail(
       envelope: true,
       bodyParts: ["1", "2"] as unknown as string[],
       bodyStructure: true,
+      source: true,
     },
     { uid: true },
   );
@@ -186,6 +192,7 @@ export async function getEmail(
     body: bodyBuf?.toString("utf-8") ?? "",
     html: htmlBuf?.toString("utf-8"),
     attachments,
+    source: (msg as unknown as { source?: Buffer }).source?.toString("utf-8"),
   };
 }
 
