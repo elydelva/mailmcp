@@ -30,7 +30,13 @@ function buildTurndown(): TurndownService {
     codeBlockStyle: "fenced",
   });
 
-  td.remove(["style", "script", "img", "head"]);
+  td.remove(["style", "script", "head"]);
+
+  // Explicit rule — overrides turndown's built-in image rule
+  td.addRule("strip-images", {
+    filter: "img",
+    replacement: () => "",
+  });
 
   td.addRule("strip-tracking-links", {
     filter: "a",
