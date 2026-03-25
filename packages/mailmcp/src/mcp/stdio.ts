@@ -18,12 +18,13 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { logger } from "../logger.js";
 
-type ToolHandler<T = unknown> = (
-  params: T,
-) => Promise<{ content: Array<{ type: "text"; text: string }> }>;
+type McpContent = { content: Array<{ type: "text"; text: string }>; isError?: boolean };
 
-function withErrorHandling<T>(handler: ToolHandler<T>, toolName: string): ToolHandler<T> {
-  return async (params: T) => {
+function withErrorHandling<P>(
+  toolName: string,
+  handler: (params: P) => Promise<McpContent>,
+): (params: P) => Promise<McpContent> {
+  return async (params: P) => {
     try {
       return await handler(params);
     } catch (err) {
@@ -36,7 +37,7 @@ function withErrorHandling<T>(handler: ToolHandler<T>, toolName: string): ToolHa
         { tool: toolName, error: msg, stack: err instanceof Error ? err.stack : undefined, params },
         "Tool execution failed",
       );
-      return { content: [{ type: "text", text: JSON.stringify({ error: msg }) }] };
+      return { content: [{ type: "text", text: msg }], isError: true };
     }
   };
 }
@@ -53,188 +54,191 @@ export async function startStdioServer(dataDir: string): Promise<void> {
   const server = new McpServer({ name: "mailmcp", version: "0.1.0" });
 
   // Account tools
-  server.tool(
+  server.registerTool(
     "setup_account",
-    "Set up an email account",
     {
-      email: z.string(),
-      password: z.string().optional(),
-      name: z.string().optional(),
+      description: "Set up an email account",
+      inputSchema: z.object({
+        email: z.string(),
+        password: z.string().optional(),
+        name: z.string().optional(),
+      }),
     },
-    withErrorHandling(async (params: { email: string; password?: string; name?: string }) => {
-      const result = await setupAccount(ctx, params);
+    withErrorHandling("setup_account", async ({ email, password, name }) => {
+      const result = await setupAccount(ctx, { email, password, name });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "setup_account"),
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "list_accounts",
-    "List configured email accounts",
-    {},
-    withErrorHandling(async () => {
+    {
+      description: "List configured email accounts",
+      annotations: { readOnlyHint: true },
+    },
+    withErrorHandling("list_accounts", async () => {
       const result = await listAccounts(ctx, {});
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "list_accounts"),
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "delete_account",
-    "Delete an email account",
     {
-      accountId: z.string(),
+      description: "Delete an email account",
+      inputSchema: z.object({ accountId: z.string() }),
+      annotations: { destructiveHint: true },
     },
-    withErrorHandling(async (params: { accountId: string }) => {
-      const result = await deleteAccount(ctx, params);
+    withErrorHandling("delete_account", async ({ accountId }) => {
+      const result = await deleteAccount(ctx, { accountId });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "delete_account"),
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "set_default_account",
-    "Set the default email account",
     {
-      accountId: z.string(),
+      description: "Set the default email account",
+      inputSchema: z.object({ accountId: z.string() }),
+      annotations: { idempotentHint: true },
     },
-    withErrorHandling(async (params: { accountId: string }) => {
-      const result = await setDefaultAccount(ctx, params);
+    withErrorHandling("set_default_account", async ({ accountId }) => {
+      const result = await setDefaultAccount(ctx, { accountId });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "set_default_account"),
+    }),
   );
 
   // Email tools
-  server.tool(
+  server.registerTool(
     "list_emails",
-    "List emails in a mailbox",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      page: z.number().optional(),
-      limit: z.number().optional(),
-      returnBody: z.boolean().optional(),
+      description: "List emails in a mailbox",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        page: z.number().optional(),
+        limit: z.number().optional(),
+        returnBody: z.boolean().optional(),
+      }),
+      annotations: { readOnlyHint: true },
     },
-    withErrorHandling(
-      async (params: {
-        accountId?: string;
-        mailbox?: string;
-        page?: number;
-        limit?: number;
-        returnBody?: boolean;
-      }) => {
-        const result = await listEmails(ctx, {
-          page: params.page ?? 1,
-          limit: params.limit ?? 20,
-          ...params,
-        });
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
-      },
-      "list_emails",
-    ),
-  );
-
-  server.tool(
-    "get_email",
-    "Get a specific email",
-    {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      uid: z.number(),
-    },
-    withErrorHandling(async (params: { accountId?: string; mailbox?: string; uid: number }) => {
-      const result = await getEmail(ctx, { mailbox: params.mailbox ?? "INBOX", ...params });
+    withErrorHandling("list_emails", async ({ accountId, mailbox, page, limit, returnBody }) => {
+      const result = await listEmails(ctx, {
+        accountId,
+        mailbox,
+        page: page ?? 1,
+        limit: limit ?? 20,
+        returnBody,
+      });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "get_email"),
+    }),
   );
 
-  server.tool(
+  server.registerTool(
+    "get_email",
+    {
+      description: "Get a specific email",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        uid: z.number(),
+      }),
+      annotations: { readOnlyHint: true },
+    },
+    withErrorHandling("get_email", async ({ accountId, mailbox, uid }) => {
+      const result = await getEmail(ctx, { accountId, mailbox: mailbox ?? "INBOX", uid });
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    }),
+  );
+
+  server.registerTool(
     "search_emails",
-    "Search emails",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      query: z.string(),
-      limit: z.number().optional(),
+      description: "Search emails",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        query: z.string(),
+        limit: z.number().optional(),
+      }),
+      annotations: { readOnlyHint: true },
     },
-    withErrorHandling(
-      async (params: { accountId?: string; mailbox?: string; query: string; limit?: number }) => {
-        const result = await searchEmails(ctx, params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
-      },
-      "search_emails",
-    ),
+    withErrorHandling("search_emails", async ({ accountId, mailbox, query, limit }) => {
+      const result = await searchEmails(ctx, { accountId, mailbox, query, limit });
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "send_email",
-    "Send an email",
     {
-      accountId: z.string(),
-      to: z.array(z.string()),
-      subject: z.string(),
-      text: z.string().optional(),
-      html: z.string().optional(),
-      cc: z.array(z.string()).optional(),
-      bcc: z.array(z.string()).optional(),
+      description: "Send an email",
+      inputSchema: z.object({
+        accountId: z.string(),
+        to: z.array(z.string()),
+        subject: z.string(),
+        text: z.string().optional(),
+        html: z.string().optional(),
+      }),
     },
-    withErrorHandling(
-      async (params: {
-        accountId: string;
-        to: string[];
-        subject: string;
-        text?: string;
-        html?: string;
-        cc?: string[];
-        bcc?: string[];
-      }) => {
-        const result = await sendEmail(ctx, params);
-        return { content: [{ type: "text", text: JSON.stringify(result) }] };
-      },
-      "send_email",
-    ),
+    withErrorHandling("send_email", async ({ accountId, to, subject, text, html }) => {
+      const result = await sendEmail(ctx, { accountId, to, subject, text, html });
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "mark_email",
-    "Mark an email as read/unread/flagged",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string(),
-      uid: z.number(),
-      read: z.boolean().optional(),
-      flagged: z.boolean().optional(),
+      description: "Mark an email as read/unread/flagged",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string(),
+        uid: z.number(),
+        read: z.boolean().optional(),
+        flagged: z.boolean().optional(),
+      }),
+      annotations: { idempotentHint: true },
     },
-    withErrorHandling(async ({ accountId, mailbox, uid, read, flagged }) => {
+    withErrorHandling("mark_email", async ({ accountId, mailbox, uid, read, flagged }) => {
       const result = await markEmail(ctx, { accountId, mailbox, uid, read, flagged });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "mark_email"),
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "move_email",
-    "Move an email to another folder",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string(),
-      uid: z.number(),
-      destination: z.string(),
+      description: "Move an email to another folder",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string(),
+        uid: z.number(),
+        destination: z.string(),
+      }),
+      annotations: { destructiveHint: true },
     },
-    withErrorHandling(async ({ accountId, mailbox, uid, destination }) => {
+    withErrorHandling("move_email", async ({ accountId, mailbox, uid, destination }) => {
       const result = await moveEmail(ctx, { accountId, mailbox, uid, destination });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "move_email"),
+    }),
   );
 
-  server.tool(
+  server.registerTool(
     "delete_email",
-    "Delete an email",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string(),
-      uid: z.number(),
+      description: "Delete an email",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string(),
+        uid: z.number(),
+      }),
+      annotations: { destructiveHint: true },
     },
-    withErrorHandling(async ({ accountId, mailbox, uid }) => {
+    withErrorHandling("delete_email", async ({ accountId, mailbox, uid }) => {
       const result = await deleteEmail(ctx, { accountId, mailbox, uid });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "delete_email"),
+    }),
   );
 
   const transport = new StdioServerTransport();
