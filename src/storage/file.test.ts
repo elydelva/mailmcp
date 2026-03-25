@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { randomUUID } from "node:crypto";
 import { mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 import { FileStorageAdapter } from "./file.js";
 
@@ -145,9 +145,7 @@ describe("updateAccount", () => {
 
   test("throws for unknown account", async () => {
     const user = await adapter.findOrCreateUser("sub-001");
-    expect(
-      adapter.updateAccount(user.id, "nonexistent", { name: "X" }),
-    ).rejects.toThrow();
+    expect(adapter.updateAccount(user.id, "nonexistent", { name: "X" })).rejects.toThrow();
   });
 });
 
@@ -199,8 +197,6 @@ describe("setDefaultAccount", () => {
 
   test("throws for unknown account", async () => {
     const user = await adapter.findOrCreateUser("sub-001");
-    expect(
-      adapter.setDefaultAccount(user.id, "nonexistent"),
-    ).rejects.toThrow();
+    expect(adapter.setDefaultAccount(user.id, "nonexistent")).rejects.toThrow();
   });
 });

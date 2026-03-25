@@ -24,8 +24,6 @@ export function createStorage(): StorageAdapter {
         'postgres storage backend not yet implemented (see ADR-002). Set STORAGE_BACKEND="file" to use the file backend.',
       );
     default:
-      throw new Error(
-        `Unknown STORAGE_BACKEND="${backend}". Valid values: "file", "postgres".`,
-      );
+      throw new Error(`Unknown STORAGE_BACKEND="${backend}". Valid values: "file", "postgres".`);
   }
 }

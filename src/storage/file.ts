@@ -7,13 +7,8 @@ import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { JSONFilePreset } from "lowdb/node";
-import { decrypt, encrypt } from "./crypto.js";
-import type {
-  CreateAccountInput,
-  EmailAccount,
-  StorageAdapter,
-  User,
-} from "./interface.js";
+import { encrypt } from "./crypto.js";
+import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
 
 interface DbSchema {
   users: User[];
@@ -35,10 +30,7 @@ export class FileStorageAdapter implements StorageAdapter {
   private getDb(): Promise<Db> {
     if (!this.dbPromise) {
       mkdirSync(dirname(this.dbPath), { recursive: true });
-      this.dbPromise = JSONFilePreset<DbSchema>(
-        this.dbPath,
-        structuredClone(DEFAULTS),
-      );
+      this.dbPromise = JSONFilePreset<DbSchema>(this.dbPath, structuredClone(DEFAULTS));
     }
     return this.dbPromise;
   }
@@ -60,26 +52,16 @@ export class FileStorageAdapter implements StorageAdapter {
 
   async listAccounts(userId: string): Promise<EmailAccount[]> {
     const db = await this.getDb();
-    return db.data.accounts
-      .filter((a) => a.userId === userId)
-      .map(decryptAccount);
+    return db.data.accounts.filter((a) => a.userId === userId).map(decryptAccount);
   }
 
-  async getAccount(
-    userId: string,
-    accountId: string,
-  ): Promise<EmailAccount | null> {
+  async getAccount(userId: string, accountId: string): Promise<EmailAccount | null> {
     const db = await this.getDb();
-    const account = db.data.accounts.find(
-      (a) => a.userId === userId && a.id === accountId,
-    );
+    const account = db.data.accounts.find((a) => a.userId === userId && a.id === accountId);
     return account ? decryptAccount(account) : null;
   }
 
-  async createAccount(
-    userId: string,
-    data: CreateAccountInput,
-  ): Promise<EmailAccount> {
+  async createAccount(userId: string, data: CreateAccountInput): Promise<EmailAccount> {
     const db = await this.getDb();
 
     // First account for this user becomes the default automatically.
@@ -114,9 +96,7 @@ export class FileStorageAdapter implements StorageAdapter {
     data: Partial<CreateAccountInput>,
   ): Promise<EmailAccount> {
     const db = await this.getDb();
-    const idx = db.data.accounts.findIndex(
-      (a) => a.userId === userId && a.id === accountId,
-    );
+    const idx = db.data.accounts.findIndex((a) => a.userId === userId && a.id === accountId);
     if (idx === -1) throw new Error(`Account ${accountId} not found`);
 
     const existing = db.data.accounts[idx];
@@ -144,9 +124,7 @@ export class FileStorageAdapter implements StorageAdapter {
   async deleteAccount(userId: string, accountId: string): Promise<void> {
     const db = await this.getDb();
     const before = db.data.accounts.length;
-    db.data.accounts = db.data.accounts.filter(
-      (a) => !(a.userId === userId && a.id === accountId),
-    );
+    db.data.accounts = db.data.accounts.filter((a) => !(a.userId === userId && a.id === accountId));
     if (db.data.accounts.length === before) {
       throw new Error(`Account ${accountId} not found`);
     }

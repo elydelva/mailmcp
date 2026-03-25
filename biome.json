@@ -1,6 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": { "enabled": true },
+  "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -19,12 +25,12 @@
   },
   "javascript": {
     "formatter": {
-      "quoteStyle": "single",
+      "quoteStyle": "double",
       "trailingCommas": "all",
       "semicolons": "always"
     }
   },
   "files": {
-    "ignore": ["node_modules", "dist", "drizzle"]
+    "includes": ["**", "!node_modules", "!dist", "!drizzle"]
   }
 }

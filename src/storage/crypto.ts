@@ -7,11 +7,7 @@
  * Wire format: base64( iv[12] || authTag[16] || ciphertext )
  */
 
-import {
-  createCipheriv,
-  createDecipheriv,
-  randomBytes,
-} from "node:crypto";
+import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 
 const ALGO = "aes-256-gcm" as const;
 const IV_LEN = 12; // 96-bit IV — recommended for GCM
@@ -20,9 +16,7 @@ const TAG_LEN = 16;
 function getKey(): Buffer {
   const hex = process.env.ENCRYPTION_KEY;
   if (!hex || hex.length !== 64) {
-    throw new Error(
-      "ENCRYPTION_KEY must be a 64-character hex string (32 bytes)",
-    );
+    throw new Error("ENCRYPTION_KEY must be a 64-character hex string (32 bytes)");
   }
   return Buffer.from(hex, "hex");
 }
@@ -32,10 +26,7 @@ export function encrypt(plaintext: string): string {
   const key = getKey();
   const iv = randomBytes(IV_LEN);
   const cipher = createCipheriv(ALGO, key, iv);
-  const encrypted = Buffer.concat([
-    cipher.update(plaintext, "utf8"),
-    cipher.final(),
-  ]);
+  const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
   const tag = cipher.getAuthTag();
   return Buffer.concat([iv, tag, encrypted]).toString("base64");
 }
@@ -52,8 +43,5 @@ export function decrypt(encoded: string): string {
   const ciphertext = buf.subarray(IV_LEN + TAG_LEN);
   const decipher = createDecipheriv(ALGO, key, iv);
   decipher.setAuthTag(tag);
-  return Buffer.concat([
-    decipher.update(ciphertext),
-    decipher.final(),
-  ]).toString("utf8");
+  return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("utf8");
 }
