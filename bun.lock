@@ -18,39 +18,27 @@
         "typescript": "^6.0.2",
       },
     },
-    "packages/core": {
-      "name": "@mailmcp/core",
+    "packages/crypto": {
+      "name": "@mailmcp/crypto",
       "version": "0.1.0",
-      "dependencies": {
-        "@sinclair/typebox": "^0.34.48",
-        "drizzle-orm": "^0.45.1",
-        "imapflow": "^1.2.17",
-        "lowdb": "^7.0.1",
-        "nodemailer": "^8.0.4",
-        "postgres": "^3.4.5",
-      },
-      "devDependencies": {
-        "@types/nodemailer": "^7.0.11",
-        "drizzle-kit": "^0.31.10",
-      },
     },
     "packages/imap": {
       "name": "@mailmcp/imap",
       "version": "0.1.0",
       "dependencies": {
-        "@mailmcp/core": "workspace:*",
+        "@mailmcp/storage": "workspace:*",
         "imapflow": "^1.2.17",
       },
     },
     "packages/mailmcp": {
-      "name": "mailmcp",
+      "name": "@mailmcp/cli",
       "version": "0.1.0",
       "bin": {
         "mailmcp": "./src/index.ts",
       },
       "dependencies": {
         "@clack/prompts": "^0.9.0",
-        "@mailmcp/core": "workspace:*",
+        "@mailmcp/storage": "workspace:*",
         "@mailmcp/tools": "workspace:*",
         "@modelcontextprotocol/sdk": "catalog:",
         "pino": "^9.6.0",
@@ -60,13 +48,17 @@
         "pino-pretty": "^12.0.0",
       },
     },
+    "packages/providers": {
+      "name": "@mailmcp/providers",
+      "version": "0.1.0",
+    },
     "packages/server": {
       "name": "@mailmcp/server",
       "version": "0.1.0",
       "dependencies": {
         "@fastify/cors": "^11.2.0",
         "@fastify/helmet": "^13.0.2",
-        "@mailmcp/core": "workspace:*",
+        "@mailmcp/storage": "workspace:*",
         "@mailmcp/tools": "workspace:*",
         "@modelcontextprotocol/sdk": "catalog:",
         "@sinclair/typebox": "^0.34.48",
@@ -79,20 +71,39 @@
       "name": "@mailmcp/smtp",
       "version": "0.1.0",
       "dependencies": {
-        "@mailmcp/core": "workspace:*",
+        "@mailmcp/storage": "workspace:*",
         "nodemailer": "^8.0.4",
       },
       "devDependencies": {
         "@types/nodemailer": "^7.0.11",
       },
     },
+    "packages/storage": {
+      "name": "@mailmcp/storage",
+      "version": "0.1.0",
+      "dependencies": {
+        "@mailmcp/crypto": "workspace:*",
+        "drizzle-orm": "^0.45.1",
+        "lowdb": "^7.0.1",
+        "postgres": "^3.4.5",
+      },
+      "devDependencies": {
+        "drizzle-kit": "^0.31.10",
+      },
+    },
     "packages/tools": {
       "name": "@mailmcp/tools",
       "version": "0.1.0",
       "dependencies": {
-        "@mailmcp/core": "workspace:*",
         "@mailmcp/imap": "workspace:*",
+        "@mailmcp/providers": "workspace:*",
         "@mailmcp/smtp": "workspace:*",
+        "@mailmcp/storage": "workspace:*",
+        "imapflow": "^1.2.17",
+        "nodemailer": "^8.0.4",
+      },
+      "devDependencies": {
+        "@types/nodemailer": "^7.0.11",
       },
     },
   },
@@ -245,13 +256,19 @@
 
     "@hono/node-server": ["@hono/node-server@1.19.11", "", { "peerDependencies": { "hono": "^4" } }, "sha512-dr8/3zEaB+p0D2n/IUrlPF1HZm586qgJNXK1a9fhg/PzdtkK7Ksd5l312tJX2yBuALqDYBlG20QEbayqPyxn+g=="],
 
-    "@mailmcp/core": ["@mailmcp/core@workspace:packages/core"],
+    "@mailmcp/cli": ["@mailmcp/cli@workspace:packages/mailmcp"],
+
+    "@mailmcp/crypto": ["@mailmcp/crypto@workspace:packages/crypto"],
 
     "@mailmcp/imap": ["@mailmcp/imap@workspace:packages/imap"],
+
+    "@mailmcp/providers": ["@mailmcp/providers@workspace:packages/providers"],
 
     "@mailmcp/server": ["@mailmcp/server@workspace:packages/server"],
 
     "@mailmcp/smtp": ["@mailmcp/smtp@workspace:packages/smtp"],
+
+    "@mailmcp/storage": ["@mailmcp/storage@workspace:packages/storage"],
 
     "@mailmcp/tools": ["@mailmcp/tools@workspace:packages/tools"],
 
@@ -675,8 +692,6 @@
 
     "lowdb": ["lowdb@7.0.1", "", { "dependencies": { "steno": "^4.0.2" } }, "sha512-neJAj8GwF0e8EpycYIDFqEPcx9Qz4GUho20jWFR7YiFeXzF1YMLdxB36PypcTSPMA+4+LvgyMacYhlr18Zlymw=="],
 
-    "mailmcp": ["mailmcp@workspace:packages/mailmcp"],
-
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 
     "media-typer": ["media-typer@1.1.0", "", {}, "sha512-aisnrDP4GNe06UcKFnV5bfMNPBUw4jsLGaWwWfnH3v02GnBuXX2MCVn5RbrWo0j3pczUilYblq7fQ7Nw2t5XKw=="],
@@ -795,7 +810,7 @@
 
     "safer-buffer": ["safer-buffer@2.1.2", "", {}, "sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg=="],
 
-    "secure-json-parse": ["secure-json-parse@4.1.0", "", {}, "sha512-l4KnYfEyqYJxDwlNVyRfO2E4NTHfMKAWdUuA8J0yve2Dz/E/PdBepY03RvyJpssIpRFwJoCD55wA+mEDs6ByWA=="],
+    "secure-json-parse": ["secure-json-parse@2.7.0", "", {}, "sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw=="],
 
     "semver": ["semver@7.7.4", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA=="],
 
@@ -909,6 +924,8 @@
 
     "fastify/pino": ["pino@10.3.1", "", { "dependencies": { "@pinojs/redact": "^0.4.0", "atomic-sleep": "^1.0.0", "on-exit-leak-free": "^2.1.0", "pino-abstract-transport": "^3.0.0", "pino-std-serializers": "^7.0.0", "process-warning": "^5.0.0", "quick-format-unescaped": "^4.0.3", "real-require": "^0.2.0", "safe-stable-stringify": "^2.3.1", "sonic-boom": "^4.0.1", "thread-stream": "^4.0.0" }, "bin": { "pino": "bin.js" } }, "sha512-r34yH/GlQpKZbU1BvFFqOjhISRo1MNx1tWYsYvmj6KIRHSPMT2+yHOEb1SG6NMvRoHRF0a07kCOox/9yakl1vg=="],
 
+    "fastify/secure-json-parse": ["secure-json-parse@4.1.0", "", {}, "sha512-l4KnYfEyqYJxDwlNVyRfO2E4NTHfMKAWdUuA8J0yve2Dz/E/PdBepY03RvyJpssIpRFwJoCD55wA+mEDs6ByWA=="],
+
     "imapflow/pino": ["pino@10.3.1", "", { "dependencies": { "@pinojs/redact": "^0.4.0", "atomic-sleep": "^1.0.0", "on-exit-leak-free": "^2.1.0", "pino-abstract-transport": "^3.0.0", "pino-std-serializers": "^7.0.0", "process-warning": "^5.0.0", "quick-format-unescaped": "^4.0.3", "real-require": "^0.2.0", "safe-stable-stringify": "^2.3.1", "sonic-boom": "^4.0.1", "thread-stream": "^4.0.0" }, "bin": { "pino": "bin.js" } }, "sha512-r34yH/GlQpKZbU1BvFFqOjhISRo1MNx1tWYsYvmj6KIRHSPMT2+yHOEb1SG6NMvRoHRF0a07kCOox/9yakl1vg=="],
 
     "import-fresh/resolve-from": ["resolve-from@4.0.0", "", {}, "sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g=="],
@@ -924,8 +941,6 @@
     "log-update/strip-ansi": ["strip-ansi@7.2.0", "", { "dependencies": { "ansi-regex": "^6.2.2" } }, "sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w=="],
 
     "micromatch/picomatch": ["picomatch@2.3.2", "", {}, "sha512-V7+vQEJ06Z+c5tSye8S+nHUfI51xoXIXjHQ99cQtKUkQqqO1kO/KCJUfZXuB47h/YBlDhah2H3hdUGXn8ie0oA=="],
-
-    "pino-pretty/secure-json-parse": ["secure-json-parse@2.7.0", "", {}, "sha512-6aU+Rwsezw7VR8/nyvKTx8QpWH9FrcYiXXlqC4z5d5XQBDRqtbfsRjnwGyqbi3gddNtWHuEk9OANUotL26qKUw=="],
 
     "pino-pretty/strip-json-comments": ["strip-json-comments@3.1.1", "", {}, "sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig=="],
 

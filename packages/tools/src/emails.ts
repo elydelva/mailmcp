@@ -1,4 +1,3 @@
-import { decryptToString } from "@mailmcp/core";
 import type { ImapPool } from "@mailmcp/imap";
 import {
   deleteEmail as imapDeleteEmail,
@@ -16,6 +15,7 @@ import {
   replyEmail as smtpReplyEmail,
   sendEmail as smtpSendEmail,
 } from "@mailmcp/smtp";
+import { decryptToString } from "@mailmcp/storage";
 import type { ToolContext } from "./context.js";
 
 // ── Deps injection ───────────────────────────────────────────────────────────

@@ -1,5 +1,5 @@
 {
-  "name": "@mailmcp/smtp",
+  "name": "@mailmcp/crypto",
   "version": "0.1.0",
   "type": "module",
   "exports": {
@@ -10,12 +10,5 @@
   },
   "scripts": {
     "typecheck": "tsc --build tsconfig.json"
-  },
-  "dependencies": {
-    "@mailmcp/storage": "workspace:*",
-    "nodemailer": "^8.0.4"
-  },
-  "devDependencies": {
-    "@types/nodemailer": "^7.0.11"
   }
 }

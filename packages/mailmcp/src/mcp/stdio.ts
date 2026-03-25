@@ -1,4 +1,4 @@
-import { createStorage, initEncryptionKey } from "@mailmcp/core";
+import { createStorage, initEncryptionKey } from "@mailmcp/storage";
 import type { ToolContext } from "@mailmcp/tools";
 import {
   deleteAccount,

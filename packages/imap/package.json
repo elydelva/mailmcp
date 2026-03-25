@@ -12,7 +12,7 @@
     "typecheck": "tsc --build tsconfig.json"
   },
   "dependencies": {
-    "@mailmcp/core": "workspace:*",
+    "@mailmcp/storage": "workspace:*",
     "imapflow": "^1.2.17"
   }
 }

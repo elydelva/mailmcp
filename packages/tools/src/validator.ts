@@ -4,12 +4,13 @@
  * Tests that credentials actually work before persisting an account.
  * Used by the setup wizard (ADR-011) and the setup_account MCP tool (ADR-007).
  *
- * ADR-004 — Provider Detection
+ * Placed in @mailmcp/tools (ADR-014) to avoid adding imapflow/nodemailer as
+ * direct dependencies of @mailmcp/providers.
  */
 
+import type { ProviderConfig } from "@mailmcp/providers";
 import { ImapFlow } from "imapflow";
 import nodemailer from "nodemailer";
-import type { ProviderConfig } from "./known-providers.js";
 
 export interface ValidationResult {
   imap: { ok: boolean; error?: string };
