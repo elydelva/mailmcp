@@ -223,7 +223,16 @@ export async function replyEmail(
   const { accountId, originalMessageId, originalReferences, to, subject, text, html } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
   const reply = _deps.smtpReply ?? smtpReplyEmail;
-  return reply({ account, password, originalMessageId, originalReferences, to, subject, text, html });
+  return reply({
+    account,
+    password,
+    originalMessageId,
+    originalReferences,
+    to,
+    subject,
+    text,
+    html,
+  });
 }
 
 export async function forwardEmail(
