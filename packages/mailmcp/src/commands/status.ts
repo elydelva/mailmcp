@@ -1,5 +1,6 @@
-import { createStorage, listAccounts } from "@mailmcp/core";
+import { listAccounts } from "@mailmcp/core";
 import { getActiveWorkspace } from "../workspace/config.js";
+import { createLocalContext } from "./local-ctx.js";
 
 export async function showStatus(): Promise<void> {
   const { name, workspace } = await getActiveWorkspace();
@@ -8,10 +9,7 @@ export async function showStatus(): Promise<void> {
 
   if (workspace.type === "stdio") {
     console.log(`Data dir:  ${workspace.dataDir}`);
-    process.env.STORAGE_BACKEND = "file";
-    process.env.DB_PATH = `${workspace.dataDir}/db.json`;
-    const storage = createStorage();
-    const ctx = { userId: "local", storage };
+    const ctx = await createLocalContext(workspace.dataDir);
     const { accounts } = await listAccounts(ctx, {});
     console.log(`Accounts:  ${accounts.length}`);
   } else {
@@ -29,4 +27,5 @@ export async function showStatus(): Promise<void> {
       console.log("Health:    unreachable");
     }
   }
+  process.exit(0);
 }

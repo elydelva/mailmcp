@@ -12,7 +12,6 @@ const { values, positionals } = parseArgs({
 });
 
 if (values.mcp) {
-  // stdio MCP server mode
   const { startStdioServer } = await import("./mcp/stdio.js");
   const { getActiveWorkspace } = await import("./workspace/config.js");
   const { workspace } = await getActiveWorkspace();
@@ -49,6 +48,7 @@ if (values.mcp) {
           console.log("Usage: mailmcp workspace <list|use|add|remove>");
           break;
       }
+      process.exit(0);
       break;
     }
     case "setup": {
@@ -82,5 +82,6 @@ Commands:
   mailmcp accounts remove <email>  Remove an account
   mailmcp status                   Show active workspace status
 `);
+      process.exit(0);
   }
 }
