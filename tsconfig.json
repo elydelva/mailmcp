@@ -1,14 +1,9 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "skipLibCheck": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "types": ["bun-types"]
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/server" },
+    { "path": "./packages/mailmcp" }
+  ]
 }

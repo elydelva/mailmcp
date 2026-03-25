@@ -1,0 +1,15 @@
+{
+  "name": "mailmcp",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "mailmcp": "src/index.ts"
+  },
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mailmcp/core": "workspace:*"
+  }
+}

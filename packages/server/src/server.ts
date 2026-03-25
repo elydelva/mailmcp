@@ -1,5 +1,5 @@
+import { createStorage } from "@mailmcp/core";
 import Fastify from "fastify";
-import { createStorage } from "./storage/index.js";
 
 export async function buildServer() {
   const server = Fastify({
