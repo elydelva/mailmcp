@@ -1,1 +1,4 @@
+bun run lint
+bun biome format .
+bun run knip
 bun test
