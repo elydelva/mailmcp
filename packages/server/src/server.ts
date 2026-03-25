@@ -1,5 +1,7 @@
 import { createStorage } from "@mailmcp/core";
 import Fastify from "fastify";
+import { accountsRoutes } from "./api/accounts.js";
+import { mcpRoutes } from "./mcp/transport.js";
 
 export async function buildServer() {
   const server = Fastify({
@@ -12,6 +14,9 @@ export async function buildServer() {
   server.decorate("storage", createStorage());
 
   server.get("/health", async () => ({ status: "ok", service: "mailmcp" }));
+
+  server.register(accountsRoutes);
+  server.register(mcpRoutes);
 
   return server;
 }
