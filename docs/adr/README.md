@@ -14,7 +14,7 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-004](ADR-004-provider-detection.md) | Provider Detection | `core` | completed |
 | [ADR-005](ADR-005-imap-client.md) | IMAP Client & Connection Pool | `core` | completed |
 | [ADR-006](ADR-006-smtp-client.md) | SMTP Client | `core` | completed |
-| [ADR-007](ADR-007-mcp-tools-accounts.md) | MCP Tools — Account Management | `core` + `server` | todo |
+| [ADR-007](ADR-007-mcp-tools-accounts.md) | MCP Tools — Account Management | `core` + `server` | completed |
 | [ADR-008](ADR-008-mcp-tools-email.md) | MCP Tools — Email Operations | `core` + `server` | todo |
 | [ADR-009](ADR-009-docker-deployment.md) | Docker & Production Deployment | `server` | todo |
 | [ADR-010](ADR-010-monorepo-architecture.md) | Monorepo Architecture | — | todo |

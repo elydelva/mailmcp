@@ -2,9 +2,9 @@
 issue: ADR-007
 title: MCP Tools — Account Management
 branch: feat/mcp-tools-accounts
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 20
+pr_url: https://github.com/elydelva/mailmcp/pull/20
 github_issue: 7
 github_issue_url: https://github.com/elydelva/mailmcp/issues/7
 depends_on: [ADR-010, ADR-004, ADR-001]
