@@ -27,5 +27,5 @@
     }
   },
   "ignoreExportsUsedInFile": true,
-  "ignore": [".claude/**"]
+  "ignore": []
 }
