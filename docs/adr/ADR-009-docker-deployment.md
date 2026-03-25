@@ -2,7 +2,7 @@
 issue: ADR-009
 title: Docker & Production Deployment
 branch: feat/docker-deployment
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 9

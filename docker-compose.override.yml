@@ -1,0 +1,30 @@
+# Local dev — no Traefik, ports exposed directly
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  hydra:
+    command: serve all --dev
+    ports:
+      - "4444:4444"
+      - "4445:4445"
+
+  hydra-ui:
+    ports:
+      - "3001:3000"
+
+  mailmcp:
+    image: mailmcp:dev
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+    environment:
+      SERVER_BASE_URL: http://localhost:3000
+      HYDRA_PUBLIC_URL: http://localhost:4444
+      HYDRA_ADMIN_URL: http://hydra:4445
+      STORAGE_BACKEND: postgres
+      DATABASE_URL: postgres://mailmcp:${POSTGRES_PASSWORD:-dev}@postgres:5432/mcp_mail?sslmode=disable
+    ports:
+      - "3000:3000"
+    labels: []

@@ -3,13 +3,13 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: hydra
+      POSTGRES_USER: mailmcp
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: hydra
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./deploy/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hydra"]
+      test: ["CMD-SHELL", "pg_isready -U mailmcp"]
       interval: 5s
       retries: 10
 
@@ -17,7 +17,7 @@ services:
     image: oryd/hydra:v2.2.0
     command: migrate sql -e --yes
     environment:
-      DSN: postgres://hydra:${POSTGRES_PASSWORD}@postgres:5432/hydra?sslmode=disable
+      DSN: postgres://mailmcp:${POSTGRES_PASSWORD}@postgres:5432/hydra?sslmode=disable
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,13 +26,13 @@ services:
   hydra:
     image: oryd/hydra:v2.2.0
     restart: unless-stopped
-    command: serve all --dev
+    command: serve all
     environment:
-      DSN: postgres://hydra:${POSTGRES_PASSWORD}@postgres:5432/hydra?sslmode=disable
-      URLS_SELF_ISSUER: ${HYDRA_PUBLIC_URL}
-      URLS_CONSENT: ${AUTH_UI_URL}/consent
-      URLS_LOGIN: ${AUTH_UI_URL}/login
-      URLS_LOGOUT: ${AUTH_UI_URL}/logout
+      DSN: postgres://mailmcp:${POSTGRES_PASSWORD}@postgres:5432/hydra?sslmode=disable
+      URLS_SELF_ISSUER: https://${HYDRA_DOMAIN}
+      URLS_CONSENT: https://${AUTH_UI_DOMAIN}/consent
+      URLS_LOGIN: https://${AUTH_UI_DOMAIN}/login
+      URLS_LOGOUT: https://${AUTH_UI_DOMAIN}/logout
       SECRETS_SYSTEM: ${HYDRA_SECRET}
       OIDC_DYNAMIC_CLIENT_REGISTRATION_ENABLED: "true"
       OIDC_DYNAMIC_CLIENT_REGISTRATION_DEFAULT_SCOPE: openid,offline_access
@@ -46,6 +46,12 @@ services:
     expose:
       - "4444"
       - "4445"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hydra.rule=Host(`${HYDRA_DOMAIN}`)"
+      - "traefik.http.routers.hydra.entrypoints=websecure"
+      - "traefik.http.routers.hydra.tls.certresolver=letsencrypt"
+      - "traefik.http.services.hydra.loadbalancer.server.port=4444"
 
   hydra-ui:
     image: oryd/hydra-login-consent-node:latest
@@ -56,29 +62,57 @@ services:
       - "3000"
     depends_on:
       - hydra
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hydra-ui.rule=Host(`${AUTH_UI_DOMAIN}`)"
+      - "traefik.http.routers.hydra-ui.entrypoints=websecure"
+      - "traefik.http.routers.hydra-ui.tls.certresolver=letsencrypt"
+      - "traefik.http.services.hydra-ui.loadbalancer.server.port=3000"
 
   mailmcp:
-    image: mailmcp:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/${GHCR_REPO:-elydelva/mailmcp}:${IMAGE_TAG:-main}
     restart: unless-stopped
     environment:
-      BASE_URL: https://${MCP_MAIL_DOMAIN}
+      SERVER_BASE_URL: https://${MCP_DOMAIN}
       HYDRA_PUBLIC_URL: https://${HYDRA_DOMAIN}
       HYDRA_ADMIN_URL: http://hydra:4445
-      HYDRA_API_KEY: ${HYDRA_API_KEY}
-      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
-      STORAGE_BACKEND: ${STORAGE_BACKEND:-postgres}
-      DATABASE_URL: postgresql://mcp:${MCP_DB_PASSWORD}@postgres:5432/mcp_mail
-      DATA_DIR: /data
-    volumes:
-      - mcp_data:/data
+      STORAGE_BACKEND: postgres
+      DATABASE_URL: postgres://mailmcp:${POSTGRES_PASSWORD}@postgres:5432/mcp_mail?sslmode=disable
     depends_on:
-      - hydra
+      postgres:
+        condition: service_healthy
+      hydra:
+        condition: service_started
     expose:
       - "3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailmcp.rule=Host(`${MCP_DOMAIN}`)"
+      - "traefik.http.routers.mailmcp.entrypoints=websecure"
+      - "traefik.http.routers.mailmcp.tls.certresolver=letsencrypt"
+      - "traefik.http.services.mailmcp.loadbalancer.server.port=3000"
+
+  traefik:
+    image: traefik:v3.3
+    restart: unless-stopped
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
 
 volumes:
   postgres_data:
-  mcp_data:
+  letsencrypt:
