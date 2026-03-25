@@ -7,6 +7,8 @@ pr: ~
 pr_url: ~
 github_issue: 4
 github_issue_url: https://github.com/elydelva/mailmcp/issues/4
+depends_on: [ADR-010]
+required_by: [ADR-005, ADR-007, ADR-011]
 ---
 
 # ADR-004 — Provider Detection
@@ -14,6 +16,8 @@ github_issue_url: https://github.com/elydelva/mailmcp/issues/4
 ## Context
 The setup wizard should detect IMAP/SMTP config automatically from an email address,
 minimizing manual configuration.
+
+**Scope : `packages/core/providers/`.** Utilisé par le CLI wizard (ADR-011) et les handlers MCP `setup_account` (ADR-007). Aucune dépendance vers Fastify ou un transport.
 
 ## Decisions
 - Static database of known providers (gmail, icloud, outlook, yahoo, protonmail, fastmail, zoho)

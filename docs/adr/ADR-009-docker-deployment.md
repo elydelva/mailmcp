@@ -7,6 +7,8 @@ pr: ~
 pr_url: ~
 github_issue: 9
 github_issue_url: https://github.com/elydelva/mailmcp/issues/9
+depends_on: [ADR-010, ADR-003]
+required_by: []
 ---
 
 # ADR-009 — Docker & Production Deployment
@@ -14,8 +16,10 @@ github_issue_url: https://github.com/elydelva/mailmcp/issues/9
 ## Context
 The project must be deployable with a single command on a VPS behind Traefik.
 
+**Scope : `packages/server` uniquement.** Le Dockerfile build `packages/server`, pas le monorepo entier. `packages/mailmcp` se distribue via npm/bun install, pas Docker.
+
 ## Decisions
-- Docker image: `mailmcp` based on `oven/bun:1-alpine`
+- Docker image basée sur `oven/bun:1-alpine`, build de `packages/server` uniquement
 - Multi-stage build (builder + minimal runner)
 - Non-root user inside container
 - docker-compose.yml with Hydra + hydra-ui + mailmcp + Traefik labels

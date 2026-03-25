@@ -7,6 +7,8 @@ pr: ~
 pr_url: ~
 github_issue: 3
 github_issue_url: https://github.com/elydelva/mailmcp/issues/3
+depends_on: [ADR-010]
+required_by: [ADR-009]
 ---
 
 # ADR-003 — OAuth 2.1 Endpoints
@@ -14,6 +16,8 @@ github_issue_url: https://github.com/elydelva/mailmcp/issues/3
 ## Context
 The MCP server must expose OAuth endpoints required by the MCP spec (2025-11-25)
 to be compatible with Claude.ai web, mobile, and desktop.
+
+**Scope : `packages/server` uniquement.** Ces endpoints n'existent pas en mode stdio (ADR-011). En mode stdio, il n'y a pas d'authentification — le `userId` est la constante `"local"`.
 
 ## Decisions
 - `GET /.well-known/oauth-protected-resource` (RFC 9728)

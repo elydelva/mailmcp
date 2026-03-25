@@ -7,12 +7,16 @@ pr: ~
 pr_url: ~
 github_issue: 6
 github_issue_url: https://github.com/elydelva/mailmcp/issues/6
+depends_on: [ADR-010]
+required_by: [ADR-008]
 ---
 
 # ADR-006 — SMTP Client
 
 ## Context
 Email sending operations use SMTP via nodemailer.
+
+**Scope : `packages/core/smtp/`.** Pas de dépendance vers un transport. Utilisé par les handlers de `core/tools/` appelés depuis stdio ou server indifféremment.
 
 ## Decisions
 - Client: `nodemailer` (Node.js/Bun standard)

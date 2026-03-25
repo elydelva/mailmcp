@@ -7,6 +7,8 @@ pr: 10
 pr_url: https://github.com/elydelva/mailmcp/pull/10
 github_issue: 1
 github_issue_url: https://github.com/elydelva/mailmcp/issues/1
+depends_on: []
+required_by: [ADR-002, ADR-007, ADR-010]
 ---
 
 # ADR-001 — Storage Layer: File Backend
