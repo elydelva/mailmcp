@@ -4,7 +4,7 @@
     "packages/core": {
       "project": ["src/**/*.ts"],
       "ignoreDependencies": ["@sinclair/typebox"],
-      "ignore": ["src/storage/postgres.ts", "src/tools/**"]
+      "ignore": ["src/storage/postgres.ts", "src/smtp/**", "src/tools/**"]
     },
     "packages/server": {
       "project": ["src/**/*.ts"],

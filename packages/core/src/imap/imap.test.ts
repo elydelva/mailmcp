@@ -193,7 +193,7 @@ describe("operations — with mock client", () => {
   }
 
   test("listFolders returns MailboxInfo[]", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await listFolders(makeMockClient() as any);
     expect(result).toHaveLength(2);
     expect(result[0]).toMatchObject({ name: "INBOX", delimiter: "/" });
@@ -201,7 +201,7 @@ describe("operations — with mock client", () => {
   });
 
   test("listEmails returns EmailSummary[]", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await listEmails(makeMockClient() as any, "INBOX", {
       page: 1,
       limit: 10,
@@ -226,7 +226,7 @@ describe("operations — with mock client", () => {
         };
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await listEmails(mockWithBody as any, "INBOX", {
       page: 1,
       limit: 10,
@@ -236,7 +236,7 @@ describe("operations — with mock client", () => {
   });
 
   test("getEmail returns EmailMessage with body", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await getEmail(makeMockClient() as any, "INBOX", 42);
     expect(result).not.toBeNull();
     expect(result!.uid).toBe(42);
@@ -247,7 +247,7 @@ describe("operations — with mock client", () => {
 
   test("getEmail returns null when fetchOne returns false", async () => {
     const mock = makeMockClient({ fetchOne: async () => false });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await getEmail(mock as any, "INBOX", 999);
     expect(result).toBeNull();
   });
@@ -270,14 +270,14 @@ describe("operations — with mock client", () => {
         }
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await searchEmails(mock as any, "INBOX", "hello");
     expect(result).toHaveLength(2);
   });
 
   test("searchEmails returns empty array when no results", async () => {
     const mock = makeMockClient({ search: async () => [] });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await searchEmails(mock as any, "INBOX", "zzz");
     expect(result).toEqual([]);
   });
@@ -290,7 +290,7 @@ describe("operations — with mock client", () => {
         return {};
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     await moveEmail(mock as any, 42, "INBOX", "Archive");
     expect(called).toBe(true);
   });
@@ -303,7 +303,7 @@ describe("operations — with mock client", () => {
         return true;
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     await deleteEmail(mock as any, 42, "INBOX");
     expect(called).toBe(true);
   });
@@ -316,7 +316,7 @@ describe("operations — with mock client", () => {
         return true;
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     await markEmail(mock as any, 42, "INBOX", { read: true });
     expect(added).toContainEqual(["\\Seen"]);
   });
@@ -329,7 +329,7 @@ describe("operations — with mock client", () => {
         return true;
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     await markEmail(mock as any, 42, "INBOX", { read: false });
     expect(removed).toContainEqual(["\\Seen"]);
   });
@@ -342,7 +342,7 @@ describe("operations — with mock client", () => {
         return true;
       },
     });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     await markEmail(mock as any, 42, "INBOX", { flagged: true });
     expect(added).toContainEqual(["\\Flagged"]);
   });
