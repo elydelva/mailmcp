@@ -1,11 +1,7 @@
 {
-  "files": [],
-  "references": [
-    { "path": "packages/core" },
-    { "path": "packages/imap" },
-    { "path": "packages/smtp" },
-    { "path": "packages/tools" },
-    { "path": "packages/mailmcp" },
-    { "path": "packages/server" }
-  ]
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "files": []
 }
