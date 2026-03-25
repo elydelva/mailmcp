@@ -4,10 +4,13 @@
   "type": "module",
   "module": "src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
   },
   "scripts": {
-    "typecheck": "tsc --noEmit -p ../../tsconfig.json",
+    "typecheck": "tsc --build tsconfig.json",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "bun run src/storage/migrate.ts"
   },

@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start:mcp": "bun run src/index.ts --mcp",
-    "typecheck": "tsc --noEmit -p ../../tsconfig.json"
+    "typecheck": "tsc --build tsconfig.json"
   },
   "dependencies": {
     "@clack/prompts": "^0.9.0",
