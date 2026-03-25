@@ -144,8 +144,8 @@ For Gmail and other providers that require it, use an **app password**, not your
 
 ## More
 
-- [Architecture & design decisions](docs/ARCHITECTURE.md)
-- [Contributing / development setup](docs/CONTRIBUTING.md)
+- [Architecture & design decisions](ARCHITECTURE.md)
+- [Contributing / development setup](CONTRIBUTING.md)
 
 ## License
 

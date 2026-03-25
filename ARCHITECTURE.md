@@ -105,4 +105,4 @@ packages/server      packages/mailmcp
 
 ## ADRs
 
-All architectural decisions are recorded in [`docs/adr/`](adr/). Each ADR has a GitHub Issue, a branch, and commit-sized goals. See [`docs/adr/README.md`](adr/README.md) for the full dependency graph and implementation order.
+All architectural decisions are recorded in [`docs/adr/`](docs/adr/). Each ADR has a GitHub Issue, a branch, and commit-sized goals. See [`docs/adr/README.md`](docs/adr/README.md) for the full dependency graph and implementation order.
