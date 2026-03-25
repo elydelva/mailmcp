@@ -2,9 +2,9 @@
 issue: ADR-010
 title: Monorepo Architecture — packages/core, packages/server, packages/mailmcp
 branch: refactor/monorepo-architecture
-status: todo
-pr: ~
-pr_url: ~
+status: completed
+pr: 16
+pr_url: https://github.com/elydelva/mailmcp/pull/16
 github_issue: ~
 github_issue_url: ~
 depends_on: [ADR-001]
