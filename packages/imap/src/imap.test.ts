@@ -197,7 +197,7 @@ describe("operations — with mock client", () => {
     const result = await listFolders(makeMockClient() as any);
     expect(result).toHaveLength(2);
     expect(result[0]).toMatchObject({ name: "INBOX", delimiter: "/" });
-    expect(Array.isArray(result[0]!.flags)).toBe(true);
+    expect(Array.isArray(result[0]?.flags)).toBe(true);
   });
 
   test("listEmails returns EmailSummary[]", async () => {
@@ -232,17 +232,17 @@ describe("operations — with mock client", () => {
       limit: 10,
       returnBody: true,
     });
-    expect(result[0]!.bodyText).toBe("some text");
+    expect(result[0]?.bodyText).toBe("some text");
   });
 
   test("getEmail returns EmailMessage with body", async () => {
     // biome-ignore lint/suspicious/noExplicitAny: mock client in tests
     const result = await getEmail(makeMockClient() as any, "INBOX", 42);
     expect(result).not.toBeNull();
-    expect(result!.uid).toBe(42);
-    expect(result!.body).toBe("plain text body");
-    expect(result!.html).toBe("<p>html body</p>");
-    expect(Array.isArray(result!.attachments)).toBe(true);
+    expect(result?.uid).toBe(42);
+    expect(result?.body).toBe("plain text body");
+    expect(result?.html).toBe("<p>html body</p>");
+    expect(Array.isArray(result?.attachments)).toBe(true);
   });
 
   test("getEmail returns null when fetchOne returns false", async () => {
