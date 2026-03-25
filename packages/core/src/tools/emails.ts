@@ -21,6 +21,10 @@ import type { ToolContext } from "./context.js";
 
 export type EmailDeps = {
   pool?: ImapPool;
+  /** Override SMTP sender for testing */
+  smtpSend?: typeof smtpSendEmail;
+  smtpReply?: typeof smtpReplyEmail;
+  smtpForward?: typeof smtpForwardEmail;
 };
 
 // ── Shared helper ────────────────────────────────────────────────────────────
@@ -207,8 +211,8 @@ export async function searchEmails(
 export async function sendEmail(ctx: ToolContext, params: SendEmailParams, _deps: EmailDeps = {}) {
   const { accountId, to, subject, text, html, attachments } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
-  const result = await smtpSendEmail({ account, password, to, subject, text, html, attachments });
-  return result;
+  const send = _deps.smtpSend ?? smtpSendEmail;
+  return send({ account, password, to, subject, text, html, attachments });
 }
 
 export async function replyEmail(
@@ -218,17 +222,8 @@ export async function replyEmail(
 ) {
   const { accountId, originalMessageId, originalReferences, to, subject, text, html } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
-  const result = await smtpReplyEmail({
-    account,
-    password,
-    originalMessageId,
-    originalReferences,
-    to,
-    subject,
-    text,
-    html,
-  });
-  return result;
+  const reply = _deps.smtpReply ?? smtpReplyEmail;
+  return reply({ account, password, originalMessageId, originalReferences, to, subject, text, html });
 }
 
 export async function forwardEmail(
@@ -238,15 +233,8 @@ export async function forwardEmail(
 ) {
   const { accountId, to, subject, originalText, text, html } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
-  const result = await smtpForwardEmail({
-    account,
-    password,
-    to,
-    subject,
-    originalText,
-    text,
-    html,
-  });
+  const forward = _deps.smtpForward ?? smtpForwardEmail;
+  const result = await forward({ account, password, to, subject, originalText, text, html });
   return result;
 }
 

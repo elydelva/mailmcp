@@ -320,17 +320,24 @@ describe("searchEmails", () => {
 });
 
 describe("sendEmail", () => {
-  test("calls SMTP operation and returns messageId", async () => {
+  test("delegates to smtpSend dep and returns its result", async () => {
     const storage = createMemoryStorage();
     await createAccountInStorage(storage, "user-1");
     const ctx: ToolContext = { userId: "user-1", storage };
 
-    // Mock the smtp operation by replacing module-level — we test that sendEmail
-    // surfaces errors from smtp, confirming it delegates correctly.
-    // Since we can't easily mock nodemailer here, we test error propagation.
-    await expect(
-      sendEmail(ctx, { to: "dest@example.com", subject: "Hi", text: "Hello" }),
-    ).rejects.toThrow(); // SMTP will fail without real server — expected in unit test
+    let called = false;
+    // biome-ignore lint/suspicious/noExplicitAny: mock return value
+    const mockSend = async (_input: any) => {
+      called = true;
+      return { messageId: "<mock-id>" };
+    };
+
+    await sendEmail(
+      ctx,
+      { to: "dest@example.com", subject: "Hi", text: "Hello" },
+      { smtpSend: mockSend as never },
+    );
+    expect(called).toBe(true);
   });
 });
 
