@@ -1,7 +1,11 @@
-# ADR-XXX — Title
+# ADR Template
 
-<!-- Copy this file to docs/adr/ADR-XXX-slug.md and fill in every section. -->
+Copy this file to `docs/adr/ADR-XXX-slug.md` and fill in every section.
+Remove sections that genuinely do not apply (e.g. `## Abandonment` while the ADR is active).
 
+---
+
+```markdown
 ---
 issue: ADR-XXX
 title: …
@@ -15,52 +19,36 @@ depends_on: []          # ADRs that must be completed before this one starts
 required_by: []         # ADRs that cannot start until this one is completed
 ---
 
+# ADR-XXX — Title
+
 ## Context
 
-<!--
 Why does this decision need to be made?
 What problem are we solving, and what constraints apply?
--->
 
 ## Decisions
 
-<!--
-Bullet list of concrete technical choices made.
-Each decision should be independently understandable.
--->
-
--
+- Concrete technical choice #1
+- Concrete technical choice #2
 
 ## Alternatives considered
 
-<!--
-What other options were evaluated and why were they rejected?
--->
-
 | Option | Reason rejected |
 |--------|----------------|
-| | |
+| …      | …              |
 
 ## Goals / Commits
 
-<!--
-Checklist of the commits / sub-tasks that implement this ADR.
-Use conventional commit format: feat(<scope>): description
-Check items off as they land.
--->
-
 - [ ] `feat(<scope>): …`
+- [ ] `test(<scope>): …`
 
 ## Consequences
 
-<!--
 What does this decision make easier or harder going forward?
 Any known trade-offs or follow-up work required?
--->
 
 ## Abandonment
 
-<!--
-Only fill in if status = abandoned.
-Explain briefly why this ADR was dropped and what replaces it (if anything).
--->
+<!-- Only fill in if status = abandoned -->
+Why was this ADR dropped and what replaces it, if anything?
+```

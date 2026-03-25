@@ -1,27 +1,25 @@
-## Contexte
+## Context
 
-<!-- Quel besoin ou décision technique motive cette issue ?
-     Si elle correspond à un ADR, mentionner le numéro (ex: ADR-003). -->
+<!-- What need or technical decision motivates this issue?
+     If it maps to an ADR, reference the number (e.g. ADR-003). -->
 
-## Objectif
+## Goal
 
-<!-- Ce que cette issue doit accomplir, en une ou deux phrases. -->
+<!-- What should this issue accomplish, in one or two sentences? -->
 
-## Tâches
-
-<!-- Checklist des sous-tâches à compléter. -->
+## Tasks
 
 - [ ]
 - [ ]
 
-## ADR associé
+## Related ADR
 
-<!-- Lien vers le fichier ADR correspondant, ou "aucun" si hors-ADR. -->
+<!-- Link to the corresponding ADR file, or "none" if this is not ADR-driven. -->
 
 [ADR-XXX](../../adr/ADR-XXX-slug.md)
 
-## Critères d'acceptation
+## Acceptance criteria
 
-<!-- Comment saura-t-on que c'est terminé ? Tests, comportement observable, etc. -->
+<!-- How will we know this is done? Tests, observable behavior, etc. -->
 
 - [ ]
