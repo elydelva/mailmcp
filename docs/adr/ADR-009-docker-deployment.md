@@ -2,9 +2,9 @@
 issue: ADR-009
 title: Docker & Production Deployment
 branch: feat/docker-deployment
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 27
+pr_url: https://github.com/elydelva/mailmcp/pull/27
 github_issue: 9
 github_issue_url: https://github.com/elydelva/mailmcp/issues/9
 depends_on: [ADR-010, ADR-003]
