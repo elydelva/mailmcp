@@ -22,6 +22,7 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-012](ADR-012-node-compatible-codebase.md) | Node.js-compatible codebase — Bun as runtime only | `core` + `mailmcp` | in-progress |
 | [ADR-013](ADR-013-typescript-project-references.md) | TypeScript project references — monorepo typecheck scalability | — | in-progress |
 | [ADR-014](ADR-014-core-package-split.md) | Split @mailmcp/core by responsibility + rename CLI | `core` + `mailmcp` | in-progress |
+| [ADR-015](ADR-015-email-body-rendering.md) | Email body rendering pipeline — MIME, extraction, Markdown | `parser` | todo |
 
 ---
 
@@ -33,15 +34,17 @@ Un ADR ne peut pas démarrer avant que ses dépendances soient `completed`.
 ADR-000 ──┐
           │
 ADR-001 ──┼──► ADR-010 ──┬──► ADR-002 ──┐
-          │              │               ├──► ADR-007 ──┬──► ADR-008
-          │              ├──► ADR-003 ──►ADR-009        │
-          │              ├──► ADR-004 ──┬──► ADR-005 ───┘
-          │              │              │    (ADR-008)
-          │              │              └──► ADR-007
-          │              ├──► ADR-006 ──► ADR-008
-          │              └──► ADR-011 ◄── ADR-004, ADR-007
-          │
-          └──────────────────────────────► ADR-007
+          │              │               ├──► ADR-007 ──┬──► ADR-008 ──┐
+          │              ├──► ADR-003 ──►ADR-009        │              │
+          │              ├──► ADR-004 ──┬──► ADR-005 ───┘              │
+          │              │              │    (ADR-008)                  │
+          │              │              └──► ADR-007                   │
+          │              ├──► ADR-006 ──► ADR-008                      │
+          │              └──► ADR-011 ◄── ADR-004, ADR-007             │
+          │                                                             │
+          └──────────────────────────────► ADR-007           ADR-014 ──┤
+                                                                        │
+                                                              ADR-015 ◄─┘
 ```
 
 ### Dépendances par ADR
@@ -63,6 +66,7 @@ ADR-001 ──┼──► ADR-010 ──┬──► ADR-002 ──┐
 | ADR-012 | ADR-010, ADR-011 | ADR-013 |
 | ADR-013 | ADR-012 | — |
 | ADR-014 | ADR-010, ADR-013 | — |
+| ADR-015 | ADR-008, ADR-014 | — |
 
 ---
 
@@ -85,4 +89,6 @@ Les ADRs sur la même ligne peuvent être travaillés en parallèle.
          │
 Étape 5 │ ADR-008  (MCP tools email — nécessite ADR-005, ADR-006, ADR-007)
         │ ADR-009  (Docker — nécessite ADR-003, ADR-010)
+         │
+Étape 6 │ ADR-015  (Email body rendering — nécessite ADR-008, ADR-014)
 ```
