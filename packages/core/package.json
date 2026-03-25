@@ -7,15 +7,19 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "bun run src/storage/migrate.ts"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.48",
+    "drizzle-orm": "^0.45.1",
     "imapflow": "^1.2.17",
     "lowdb": "^7.0.1",
     "nodemailer": "^8.0.4"
   },
   "devDependencies": {
-    "@types/nodemailer": "^7.0.11"
+    "@types/nodemailer": "^7.0.11",
+    "drizzle-kit": "^0.31.10"
   }
 }

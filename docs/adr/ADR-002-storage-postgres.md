@@ -2,7 +2,7 @@
 issue: ADR-002
 title: Storage Layer — PostgreSQL Backend
 branch: feat/storage-postgres-backend
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 2

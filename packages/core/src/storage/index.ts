@@ -8,8 +8,11 @@
 
 import { FileStorageAdapter } from "./file.js";
 import type { StorageAdapter } from "./interface.js";
+import { PostgresStorageAdapter } from "./postgres.js";
 
 export type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
+export { runMigrations } from "./migrate.js";
+export { PostgresStorageAdapter } from "./postgres.js";
 
 export function createStorage(): StorageAdapter {
   const backend = process.env.STORAGE_BACKEND ?? "file";
@@ -19,10 +22,10 @@ export function createStorage(): StorageAdapter {
       const dbPath = process.env.DB_PATH ?? "data/db.json";
       return new FileStorageAdapter(dbPath);
     }
-    case "postgres":
-      throw new Error(
-        'postgres storage backend not yet implemented (see ADR-002). Set STORAGE_BACKEND="file" to use the file backend.',
-      );
+    case "postgres": {
+      const url = process.env.DATABASE_URL ?? "postgresql://localhost:5432/mailmcp";
+      return new PostgresStorageAdapter(url);
+    }
     default:
       throw new Error(`Unknown STORAGE_BACKEND="${backend}". Valid values: "file", "postgres".`);
   }
