@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { EmailAccount } from "../storage/interface.js";
+import type { EmailAccount } from "@mailmcp/core";
 import { createImapClient } from "./client.js";
 import {
   deleteEmail,

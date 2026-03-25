@@ -1,0 +1,19 @@
+{
+  "name": "@mailmcp/tools",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --build tsconfig.json"
+  },
+  "dependencies": {
+    "@mailmcp/core": "workspace:*",
+    "@mailmcp/imap": "workspace:*",
+    "@mailmcp/smtp": "workspace:*"
+  }
+}

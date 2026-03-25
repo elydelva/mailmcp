@@ -1,5 +1,5 @@
 import * as p from "@clack/prompts";
-import { setupAccount } from "@mailmcp/core";
+import { setupAccount } from "@mailmcp/tools";
 import { getActiveWorkspace } from "../workspace/config.js";
 import { createLocalContext } from "./local-ctx.js";
 

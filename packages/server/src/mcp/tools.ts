@@ -1,4 +1,4 @@
-import type { ToolContext } from "@mailmcp/core";
+import type { ToolContext } from "@mailmcp/tools";
 import {
   batchDelete,
   batchMark,
@@ -18,7 +18,7 @@ import {
   sendEmail,
   setDefaultAccount,
   setupAccount,
-} from "@mailmcp/core";
+} from "@mailmcp/tools";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 

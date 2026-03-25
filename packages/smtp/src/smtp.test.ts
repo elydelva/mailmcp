@@ -1,5 +1,5 @@
 import { expect, mock, test } from "bun:test";
-import type { EmailAccount } from "../storage/interface.js";
+import type { EmailAccount } from "@mailmcp/core";
 
 // ---------------------------------------------------------------------------
 // Minimal EmailAccount fixture

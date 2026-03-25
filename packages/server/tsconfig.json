@@ -9,6 +9,11 @@
     "rootDir": "src",
     "types": ["bun-types"]
   },
-  "references": [{ "path": "../core" }],
+  "references": [
+    { "path": "../core" },
+    { "path": "../imap" },
+    { "path": "../smtp" },
+    { "path": "../tools" }
+  ],
   "include": ["src/**/*"]
 }

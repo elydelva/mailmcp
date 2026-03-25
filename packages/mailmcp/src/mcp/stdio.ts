@@ -1,10 +1,9 @@
-import type { ToolContext } from "@mailmcp/core";
+import { createStorage, initEncryptionKey } from "@mailmcp/core";
+import type { ToolContext } from "@mailmcp/tools";
 import {
-  createStorage,
   deleteAccount,
   deleteEmail,
   getEmail,
-  initEncryptionKey,
   listAccounts,
   listEmails,
   markEmail,
@@ -13,7 +12,7 @@ import {
   sendEmail,
   setDefaultAccount,
   setupAccount,
-} from "@mailmcp/core";
+} from "@mailmcp/tools";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";

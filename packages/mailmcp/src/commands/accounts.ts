@@ -1,4 +1,4 @@
-import { deleteAccount, listAccounts } from "@mailmcp/core";
+import { deleteAccount, listAccounts } from "@mailmcp/tools";
 import { getActiveWorkspace } from "../workspace/config.js";
 import { createLocalContext } from "./local-ctx.js";
 

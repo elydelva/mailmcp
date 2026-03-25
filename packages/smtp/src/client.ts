@@ -1,5 +1,5 @@
+import type { EmailAccount } from "@mailmcp/core";
 import nodemailer from "nodemailer";
-import type { EmailAccount } from "../storage/interface.js";
 
 /**
  * Creates a nodemailer transporter for the given account.

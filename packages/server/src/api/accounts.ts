@@ -1,4 +1,4 @@
-import { setupAccount } from "@mailmcp/core";
+import { setupAccount } from "@mailmcp/tools";
 import type { FastifyPluginAsync } from "fastify";
 
 interface SetupBody {
