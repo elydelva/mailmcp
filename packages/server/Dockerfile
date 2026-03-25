@@ -7,6 +7,7 @@ COPY packages/crypto/package.json ./packages/crypto/
 COPY packages/storage/package.json ./packages/storage/
 COPY packages/providers/package.json ./packages/providers/
 COPY packages/imap/package.json ./packages/imap/
+COPY packages/parser/package.json ./packages/parser/
 COPY packages/smtp/package.json ./packages/smtp/
 COPY packages/tools/package.json ./packages/tools/
 COPY packages/server/package.json ./packages/server/
@@ -18,6 +19,7 @@ COPY packages/crypto ./packages/crypto
 COPY packages/storage ./packages/storage
 COPY packages/providers ./packages/providers
 COPY packages/imap ./packages/imap
+COPY packages/parser ./packages/parser
 COPY packages/smtp ./packages/smtp
 COPY packages/tools ./packages/tools
 COPY packages/server ./packages/server
