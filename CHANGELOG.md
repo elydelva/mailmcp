@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.2.0...mailmcp-monorepo-v0.2.1) (2026-03-25)
+
+
+### Documentation
+
+* **adr:** add adr-012 for node.js-compatible codebase with bun as runtime only ([62d658c](https://github.com/elydelva/mailmcp/commit/62d658c25fed0483b1ac17e1deb1d2ce847814eb))
+
 ## [0.2.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.1.0...mailmcp-monorepo-v0.2.0) (2026-03-25)
 
 
