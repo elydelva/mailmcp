@@ -51,6 +51,8 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
       - name: Type check
+        env:
+          NODE_OPTIONS: "--max-old-space-size=6144"
         run: bun run typecheck
 
   # ── Tests ────────────────────────────────────────────────────────────────────
