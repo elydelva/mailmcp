@@ -2,9 +2,9 @@
 issue: ADR-015
 title: Email body rendering pipeline — MIME parsing, content extraction, Markdown output
 branch: feat/email-body-rendering
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 44
+pr_url: https://github.com/elydelva/mailmcp/pull/44
 github_issue: 43
 github_issue_url: https://github.com/elydelva/mailmcp/issues/43
 depends_on: [ADR-008, ADR-014]
@@ -114,15 +114,15 @@ Les outils MCP d'ADR-008 remplacent le champ `bodyText` brut par `markdown` (ou
 
 ## Goals / Commits
 
-- [ ] `feat(parser): scaffold @mailmcp/parser package with tsconfig and deps`
-- [ ] `feat(parser): layer 1 — mailparser MIME decode, export ParsedMail`
-- [ ] `feat(parser): layer 2 — readability content extraction with linkedom`
-- [ ] `feat(parser): layer 3 — turndown html-to-markdown with tracking-link rule`
-- [ ] `feat(parser): renderEmail() pipeline wiring all three layers`
-- [ ] `test(parser): unit tests for each layer in isolation`
-- [ ] `test(parser): integration test on real newsletter fixture`
-- [ ] `feat(server): replace bodyText with markdown in MCP email tools`
-- [ ] `feat(docker): add @mailmcp/parser to build stage`
+- [x] `feat(parser): scaffold @mailmcp/parser package with tsconfig and deps`
+- [x] `feat(parser): layer 1 — mailparser MIME decode, export ParsedMail`
+- [x] `feat(parser): layer 2 — readability content extraction with linkedom`
+- [x] `feat(parser): layer 3 — turndown html-to-markdown with tracking-link rule`
+- [x] `feat(parser): renderEmail() pipeline wiring all three layers`
+- [x] `test(parser): unit tests for each layer in isolation`
+- [x] `test(parser): integration test on real newsletter fixture`
+- [x] `feat(tools): add markdown and plain text fields to get-email tool via parser`
+- [x] `feat(docker): add parser package to build stage`
 
 ## Consequences
 

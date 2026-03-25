@@ -22,7 +22,7 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-012](ADR-012-node-compatible-codebase.md) | Node.js-compatible codebase — Bun as runtime only | `core` + `mailmcp` | in-progress |
 | [ADR-013](ADR-013-typescript-project-references.md) | TypeScript project references — monorepo typecheck scalability | — | in-progress |
 | [ADR-014](ADR-014-core-package-split.md) | Split @mailmcp/core by responsibility + rename CLI | `core` + `mailmcp` | in-progress |
-| [ADR-015](ADR-015-email-body-rendering.md) | Email body rendering pipeline — MIME, extraction, Markdown | `parser` | todo |
+| [ADR-015](ADR-015-email-body-rendering.md) | Email body rendering pipeline — MIME, extraction, Markdown | `parser` | completed |
 
 ---
 
