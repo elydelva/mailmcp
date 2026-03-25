@@ -1,14 +1,12 @@
-import { createStorage, deleteAccount, listAccounts } from "@mailmcp/core";
+import { deleteAccount, listAccounts } from "@mailmcp/core";
 import { getActiveWorkspace } from "../workspace/config.js";
+import { createLocalContext } from "./local-ctx.js";
 
 export async function listAccountsCmd(): Promise<void> {
   const { workspace } = await getActiveWorkspace();
 
   if (workspace.type === "stdio") {
-    process.env.STORAGE_BACKEND = "file";
-    process.env.DB_PATH = `${workspace.dataDir}/db.json`;
-    const storage = createStorage();
-    const ctx = { userId: "local", storage };
+    const ctx = await createLocalContext(workspace.dataDir);
     const { accounts } = await listAccounts(ctx, {});
     if (accounts.length === 0) {
       console.log("No accounts configured. Run: mailmcp setup");
@@ -18,6 +16,7 @@ export async function listAccountsCmd(): Promise<void> {
       const marker = acc.isDefault ? "● " : "  ";
       console.log(`${marker}${acc.email} (${acc.provider}) [${acc.id}]`);
     }
+    process.exit(0);
   } else {
     const headers: Record<string, string> = {};
     if (workspace.token) headers.Authorization = `Bearer ${workspace.token}`;
@@ -33,6 +32,7 @@ export async function listAccountsCmd(): Promise<void> {
       const marker = acc.isDefault ? "● " : "  ";
       console.log(`${marker}${acc.email} (${acc.provider}) [${acc.id}]`);
     }
+    process.exit(0);
   }
 }
 
@@ -40,11 +40,7 @@ export async function removeAccount(emailOrId: string): Promise<void> {
   const { workspace } = await getActiveWorkspace();
 
   if (workspace.type === "stdio") {
-    process.env.STORAGE_BACKEND = "file";
-    process.env.DB_PATH = `${workspace.dataDir}/db.json`;
-    const storage = createStorage();
-    const ctx = { userId: "local", storage };
-    // Find the account by email or id
+    const ctx = await createLocalContext(workspace.dataDir);
     const { accounts } = await listAccounts(ctx, {});
     const account = accounts.find((a) => a.email === emailOrId || a.id === emailOrId);
     if (!account) {
@@ -53,6 +49,7 @@ export async function removeAccount(emailOrId: string): Promise<void> {
     }
     await deleteAccount(ctx, { accountId: account.id });
     console.log(`Removed account: ${account.email}`);
+    process.exit(0);
   } else {
     const headers: Record<string, string> = {};
     if (workspace.token) headers.Authorization = `Bearer ${workspace.token}`;
@@ -65,5 +62,6 @@ export async function removeAccount(emailOrId: string): Promise<void> {
       process.exit(1);
     }
     console.log(`Removed account: ${emailOrId}`);
+    process.exit(0);
   }
 }

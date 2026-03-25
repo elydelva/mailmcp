@@ -1,9 +1,8 @@
 {
   "extends": "./tsconfig.base.json",
-  "files": [],
-  "references": [
-    { "path": "./packages/core" },
-    { "path": "./packages/server" },
-    { "path": "./packages/mailmcp" }
-  ]
+  "compilerOptions": {
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo"
+  },
+  "include": ["packages/core/src/**/*", "packages/mailmcp/src/**/*", "packages/server/src/**/*"]
 }

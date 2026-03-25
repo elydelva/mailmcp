@@ -1,6 +1,7 @@
 import * as p from "@clack/prompts";
-import { createStorage, setupAccount } from "@mailmcp/core";
+import { setupAccount } from "@mailmcp/core";
 import { getActiveWorkspace } from "../workspace/config.js";
+import { createLocalContext } from "./local-ctx.js";
 
 export async function runSetupWizard(): Promise<void> {
   p.intro("mailmcp — account setup");
@@ -28,10 +29,7 @@ export async function runSetupWizard(): Promise<void> {
   const { workspace } = await getActiveWorkspace();
 
   if (workspace.type === "stdio") {
-    process.env.STORAGE_BACKEND = "file";
-    process.env.DB_PATH = `${workspace.dataDir}/db.json`;
-    const storage = createStorage();
-    const ctx = { userId: "local", storage };
+    const ctx = await createLocalContext(workspace.dataDir);
     const result = await setupAccount(ctx, {
       email: email as string,
       password: password as string,
@@ -39,6 +37,7 @@ export async function runSetupWizard(): Promise<void> {
     spin.stop("Done");
     const accountEmail = result.status === "ok" ? result.account.email : (email as string);
     p.outro(`Account ${accountEmail} configured`);
+    process.exit(0);
   } else {
     const headers: Record<string, string> = { "Content-Type": "application/json" };
     if (workspace.token) headers.Authorization = `Bearer ${workspace.token}`;

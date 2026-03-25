@@ -4,6 +4,7 @@ import {
   deleteAccount,
   deleteEmail,
   getEmail,
+  initEncryptionKey,
   listAccounts,
   listEmails,
   markEmail,
@@ -16,12 +17,38 @@ import {
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+import { logger } from "../logger.js";
+
+type ToolHandler<T = unknown> = (
+  params: T,
+) => Promise<{ content: Array<{ type: "text"; text: string }> }>;
+
+function withErrorHandling<T>(handler: ToolHandler<T>, toolName: string): ToolHandler<T> {
+  return async (params: T) => {
+    try {
+      return await handler(params);
+    } catch (err) {
+      let msg = err instanceof Error ? err.message : String(err);
+      if (err instanceof Error && "responseText" in err && err.responseText) {
+        msg = err.responseText;
+      }
+      logger.error(
+        { tool: toolName, error: msg, stack: err instanceof Error ? err.stack : undefined, params },
+        "Tool execution failed",
+      );
+      return { content: [{ type: "text", text: JSON.stringify({ error: msg }) }] };
+    }
+  };
+}
 
 export async function startStdioServer(dataDir: string): Promise<void> {
+  await initEncryptionKey(dataDir);
   process.env.STORAGE_BACKEND = "file";
   process.env.DB_PATH = `${dataDir}/db.json`;
   const storage = createStorage();
   const ctx: ToolContext = { userId: "local", storage };
+
+  logger.info({ dataDir }, "Starting mailmcp stdio server");
 
   const server = new McpServer({ name: "mailmcp", version: "0.1.0" });
 
@@ -34,16 +61,21 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       password: z.string().optional(),
       name: z.string().optional(),
     },
-    async (params) => {
+    withErrorHandling(async (params: { email: string; password?: string; name?: string }) => {
       const result = await setupAccount(ctx, params);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "setup_account"),
   );
 
-  server.tool("list_accounts", "List configured email accounts", {}, async () => {
-    const result = await listAccounts(ctx, {});
-    return { content: [{ type: "text", text: JSON.stringify(result) }] };
-  });
+  server.tool(
+    "list_accounts",
+    "List configured email accounts",
+    {},
+    withErrorHandling(async () => {
+      const result = await listAccounts(ctx, {});
+      return { content: [{ type: "text", text: JSON.stringify(result) }] };
+    }, "list_accounts"),
+  );
 
   server.tool(
     "delete_account",
@@ -51,10 +83,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
     {
       accountId: z.string(),
     },
-    async (params) => {
+    withErrorHandling(async (params: { accountId: string }) => {
       const result = await deleteAccount(ctx, params);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "delete_account"),
   );
 
   server.tool(
@@ -63,10 +95,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
     {
       accountId: z.string(),
     },
-    async (params) => {
+    withErrorHandling(async (params: { accountId: string }) => {
       const result = await setDefaultAccount(ctx, params);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "set_default_account"),
   );
 
   // Email tools
@@ -80,10 +112,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       limit: z.number().optional(),
       returnBody: z.boolean().optional(),
     },
-    async (params) => {
+    withErrorHandling(async (params) => {
       const result = await listEmails(ctx, { page: 1, limit: 20, ...params });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "list_emails"),
   );
 
   server.tool(
@@ -94,10 +126,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       mailbox: z.string().optional(),
       uid: z.number(),
     },
-    async (params) => {
+    withErrorHandling(async (params) => {
       const result = await getEmail(ctx, { mailbox: "INBOX", ...params });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "get_email"),
   );
 
   server.tool(
@@ -109,10 +141,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       query: z.string(),
       limit: z.number().optional(),
     },
-    async (params) => {
+    withErrorHandling(async (params) => {
       const result = await searchEmails(ctx, params);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "search_emails"),
   );
 
   server.tool(
@@ -127,10 +159,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       cc: z.array(z.string()).optional(),
       bcc: z.array(z.string()).optional(),
     },
-    async (params) => {
+    withErrorHandling(async (params) => {
       const result = await sendEmail(ctx, params);
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "send_email"),
   );
 
   server.tool(
@@ -143,10 +175,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       read: z.boolean().optional(),
       flagged: z.boolean().optional(),
     },
-    async ({ accountId, mailbox, uid, read, flagged }) => {
+    withErrorHandling(async ({ accountId, mailbox, uid, read, flagged }) => {
       const result = await markEmail(ctx, { accountId, mailbox, uid, read, flagged });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "mark_email"),
   );
 
   server.tool(
@@ -158,10 +190,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       uid: z.number(),
       destination: z.string(),
     },
-    async ({ accountId, mailbox, uid, destination }) => {
+    withErrorHandling(async ({ accountId, mailbox, uid, destination }) => {
       const result = await moveEmail(ctx, { accountId, mailbox, uid, destination });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "move_email"),
   );
 
   server.tool(
@@ -172,10 +204,10 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       mailbox: z.string(),
       uid: z.number(),
     },
-    async ({ accountId, mailbox, uid }) => {
+    withErrorHandling(async ({ accountId, mailbox, uid }) => {
       const result = await deleteEmail(ctx, { accountId, mailbox, uid });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    },
+    }, "delete_email"),
   );
 
   const transport = new StdioServerTransport();

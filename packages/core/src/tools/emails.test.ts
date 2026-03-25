@@ -1,6 +1,7 @@
-import { describe, expect, test } from "bun:test";
+import { beforeAll, describe, expect, test } from "bun:test";
 import type { EmailMessage, EmailSummary, MailboxInfo } from "../imap/operations.js";
 import type { ImapPool } from "../imap/pool.js";
+import { encrypt } from "../storage/crypto.js";
 import type {
   CreateAccountInput,
   EmailAccount,
@@ -21,6 +22,10 @@ import {
   searchEmails,
   sendEmail,
 } from "./emails.js";
+
+beforeAll(() => {
+  process.env.ENCRYPTION_KEY = "a".repeat(64);
+});
 
 // ── In-memory StorageAdapter ─────────────────────────────────────────────────
 
@@ -56,7 +61,7 @@ function createMemoryStorage(): StorageAdapter {
         smtpPort: data.smtpPort,
         smtpSecure: data.smtpSecure,
         username: data.username,
-        passwordEnc: data.password,
+        passwordEnc: encrypt(data.password),
         isDefault: allUserAccounts.length === 0,
         createdAt: new Date(),
       };
@@ -99,8 +104,7 @@ function createAccountInStorage(storage: StorageAdapter, userId: string): Promis
     smtpPort: 587,
     smtpSecure: false,
     username: "test@example.com",
-    // base64 of "password"
-    password: Buffer.from("password").toString("base64"),
+    password: "password",
   });
 }
 

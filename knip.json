@@ -12,7 +12,8 @@
       "ignore": ["src/auth/**", "src/config.ts"]
     },
     "packages/mailmcp": {
-      "project": ["src/**/*.ts"]
+      "project": ["src/**/*.ts"],
+      "ignoreDependencies": ["pino-pretty"]
     }
   },
   "ignoreExportsUsedInFile": true,

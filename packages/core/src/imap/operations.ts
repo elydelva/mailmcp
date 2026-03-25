@@ -81,7 +81,12 @@ export async function listEmails(
 ): Promise<EmailSummary[]> {
   const { page, limit, returnBody = false } = opts;
 
-  await client.mailboxOpen(mailbox);
+  try {
+    await client.mailboxOpen(mailbox);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`Failed to open mailbox "${mailbox}": ${msg}`);
+  }
 
   const fetchQuery = {
     uid: true,
@@ -96,19 +101,24 @@ export async function listEmails(
 
   const results: EmailSummary[] = [];
 
-  for await (const msg of client.fetch(range, fetchQuery)) {
-    const envelope = msg.envelope;
-    const bodyText = returnBody ? msg.bodyParts?.get("1")?.toString("utf-8") : undefined;
+  try {
+    for await (const msg of client.fetch(range, fetchQuery)) {
+      const envelope = msg.envelope;
+      const bodyText = returnBody ? msg.bodyParts?.get("1")?.toString("utf-8") : undefined;
 
-    results.push({
-      uid: msg.uid,
-      subject: envelope?.subject ?? "(no subject)",
-      from: envelopeFrom(envelope),
-      date: envelope?.date instanceof Date ? envelope.date : new Date(envelope?.date ?? 0),
-      read: msg.flags?.has("\\Seen") ?? false,
-      flagged: msg.flags?.has("\\Flagged") ?? false,
-      ...(bodyText !== undefined ? { bodyText } : {}),
-    });
+      results.push({
+        uid: msg.uid,
+        subject: envelope?.subject ?? "(no subject)",
+        from: envelopeFrom(envelope),
+        date: envelope?.date instanceof Date ? envelope.date : new Date(envelope?.date ?? 0),
+        read: msg.flags?.has("\\Seen") ?? false,
+        flagged: msg.flags?.has("\\Flagged") ?? false,
+        ...(bodyText !== undefined ? { bodyText } : {}),
+      });
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    throw new Error(`Failed to fetch emails: ${msg}`);
   }
 
   return results;
