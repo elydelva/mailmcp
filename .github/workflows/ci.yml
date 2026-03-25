@@ -31,7 +31,7 @@ jobs:
       - name: Biome check
         run: bun run lint
       - name: Biome format check
-        run: bun biome format --check .
+        run: bun biome format .
 
   # ── Type check ───────────────────────────────────────────────────────────────
   typecheck:
