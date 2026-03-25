@@ -2,7 +2,7 @@
 issue: ADR-007
 title: MCP Tools — Account Management
 branch: feat/mcp-tools-accounts
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 7
