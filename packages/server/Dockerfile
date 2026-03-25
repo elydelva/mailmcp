@@ -13,6 +13,9 @@ RUN bun install --frozen-lockfile
 
 # Copy sources and build
 COPY packages/core ./packages/core
+COPY packages/imap ./packages/imap
+COPY packages/smtp ./packages/smtp
+COPY packages/tools ./packages/tools
 COPY packages/server ./packages/server
 RUN bun build packages/server/src/index.ts --outdir dist --target bun
 
