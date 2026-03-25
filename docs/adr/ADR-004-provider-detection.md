@@ -2,7 +2,7 @@
 issue: ADR-004
 title: Provider Detection & Setup Wizard
 branch: feat/provider-detection
-status: in-progress
+status: completed
 pr: ~
 pr_url: ~
 github_issue: 4
@@ -26,9 +26,9 @@ minimizing manual configuration.
 - IMAP + SMTP connection test before saving any account
 
 ## Goals / Commits
-- [ ] `feat(providers): add known-providers static database`
-- [ ] `feat(providers): implement email-to-provider detection by domain`
-- [ ] `feat(providers): add DNS SRV/MX lookup for custom domains`
-- [ ] `feat(providers): add Mozilla Autoconfig + MS Autodiscover HTTP fallback`
-- [ ] `feat(providers): add IMAP/SMTP connection validator`
-- [ ] `test(providers): unit tests for detection logic`
+- [x] `feat(providers): add known-providers static database`
+- [x] `feat(providers): implement email-to-provider detection by domain`
+- [x] `feat(providers): add DNS SRV/MX lookup for custom domains`
+- [x] `feat(providers): add Mozilla Autoconfig + MS Autodiscover HTTP fallback`
+- [x] `feat(providers): add IMAP/SMTP connection validator`
+- [x] `test(providers): unit tests for detection logic`
