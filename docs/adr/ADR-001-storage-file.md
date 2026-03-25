@@ -2,7 +2,11 @@
 issue: ADR-001
 title: Storage Layer — Interface + File Backend
 branch: feat/storage-file-backend
-status: in-progress
+status: completed
+pr: 10
+pr_url: https://github.com/elydelva/mailmcp/pull/10
+github_issue: 1
+github_issue_url: https://github.com/elydelva/mailmcp/issues/1
 ---
 
 # ADR-001 — Storage Layer: File Backend

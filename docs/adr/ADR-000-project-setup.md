@@ -3,6 +3,10 @@ issue: ADR-000
 title: Project Setup & Tooling
 branch: setup/project-init
 status: completed
+pr: ~
+pr_url: ~
+github_issue: ~
+github_issue_url: ~
 ---
 
 # ADR-000 — Project Setup & Tooling

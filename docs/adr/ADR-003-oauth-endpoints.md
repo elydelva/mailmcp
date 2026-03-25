@@ -3,6 +3,10 @@ issue: ADR-003
 title: OAuth 2.1 — Protected Resource & DCR Proxy
 branch: feat/oauth-endpoints
 status: todo
+pr: ~
+pr_url: ~
+github_issue: 3
+github_issue_url: https://github.com/elydelva/mailmcp/issues/3
 ---
 
 # ADR-003 — OAuth 2.1 Endpoints

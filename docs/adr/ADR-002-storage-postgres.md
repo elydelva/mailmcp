@@ -3,6 +3,10 @@ issue: ADR-002
 title: Storage Layer — PostgreSQL Backend
 branch: feat/storage-postgres-backend
 status: todo
+pr: ~
+pr_url: ~
+github_issue: 2
+github_issue_url: https://github.com/elydelva/mailmcp/issues/2
 ---
 
 # ADR-002 — Storage Layer: PostgreSQL Backend

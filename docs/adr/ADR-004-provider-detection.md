@@ -3,6 +3,10 @@ issue: ADR-004
 title: Provider Detection & Setup Wizard
 branch: feat/provider-detection
 status: todo
+pr: ~
+pr_url: ~
+github_issue: 4
+github_issue_url: https://github.com/elydelva/mailmcp/issues/4
 ---
 
 # ADR-004 — Provider Detection
