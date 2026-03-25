@@ -2,7 +2,7 @@
 issue: ADR-005
 title: IMAP Client & Connection Pool
 branch: feat/imap-client
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 5
