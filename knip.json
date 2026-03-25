@@ -12,9 +12,9 @@
       "ignore": ["src/auth/**", "src/config.ts"]
     },
     "packages/mailmcp": {
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["@mailmcp/core"]
+      "project": ["src/**/*.ts"]
     }
   },
-  "ignoreExportsUsedInFile": true
+  "ignoreExportsUsedInFile": true,
+  "ignore": [".claude/**"]
 }
