@@ -2,7 +2,7 @@
 issue: ADR-003
 title: OAuth 2.1 — Protected Resource & DCR Proxy
 branch: feat/oauth-endpoints
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 3

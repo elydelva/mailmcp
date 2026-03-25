@@ -16,5 +16,6 @@
       "ignoreDependencies": ["@mailmcp/core"]
     }
   },
-  "ignoreExportsUsedInFile": true
+  "ignoreExportsUsedInFile": true,
+  "ignore": [".claude/**"]
 }
