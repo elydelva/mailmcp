@@ -1,6 +1,8 @@
 {
   "workspaces": {
-    ".": {},
+    ".": {
+      "ignoreDependencies": ["bun-types"]
+    },
     "packages/core": {
       "project": ["src/**/*.ts"],
       "ignoreDependencies": ["@sinclair/typebox"]

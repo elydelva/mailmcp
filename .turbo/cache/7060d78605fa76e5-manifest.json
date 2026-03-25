@@ -1,0 +1,216 @@
+{
+  "files": {
+    "packages/core/dist/password.d.ts.map": {
+      "size": 193,
+      "mtime_nanos": 1774465338485092740,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/validator.d.ts": {
+      "size": 849,
+      "mtime_nanos": 1774465338492884692,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/index.d.ts": {
+      "size": 176,
+      "mtime_nanos": 1774465338532794623,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/.turbo/turbo-typecheck.log": {
+      "size": 28,
+      "mtime_nanos": 1774465338555163182,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/crypto.d.ts.map": {
+      "size": 264,
+      "mtime_nanos": 1774465338484152319,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/index.d.ts": {
+      "size": 413,
+      "mtime_nanos": 1774465338494235906,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/key.d.ts.map": {
+      "size": 200,
+      "mtime_nanos": 1774465338530863531,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/migrate.d.ts": {
+      "size": 117,
+      "mtime_nanos": 1774465338531546409,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/postgres.d.ts": {
+      "size": 922,
+      "mtime_nanos": 1774465338530279486,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/known-providers.d.ts": {
+      "size": 907,
+      "mtime_nanos": 1774465338487814086,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/detector.d.ts.map": {
+      "size": 424,
+      "mtime_nanos": 1774465338490748391,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/index.d.ts.map": {
+      "size": 209,
+      "mtime_nanos": 1774465338532717831,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/tsconfig.tsbuildinfo": {
+      "size": 162745,
+      "mtime_nanos": 1774465338539269444,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/schema.d.ts.map": {
+      "size": 495,
+      "mtime_nanos": 1774465338527636391,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/known-providers.d.ts.map": {
+      "size": 612,
+      "mtime_nanos": 1774465338487729085,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/file.d.ts": {
+      "size": 969,
+      "mtime_nanos": 1774465338499345138,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/password.d.ts": {
+      "size": 278,
+      "mtime_nanos": 1774465338485188490,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/interface.d.ts.map": {
+      "size": 1562,
+      "mtime_nanos": 1774465338495221619,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/index.d.ts": {
+      "size": 682,
+      "mtime_nanos": 1774465338532429204,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/migrate.d.ts.map": {
+      "size": 188,
+      "mtime_nanos": 1774465338531470658,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/index.d.ts.map": {
+      "size": 405,
+      "mtime_nanos": 1774465338494149822,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/postgres.d.ts.map": {
+      "size": 969,
+      "mtime_nanos": 1774465338530188944,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/key.d.ts": {
+      "size": 530,
+      "mtime_nanos": 1774465338530930281,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/file.d.ts.map": {
+      "size": 895,
+      "mtime_nanos": 1774465338499249554,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/crypto.d.ts": {
+      "size": 617,
+      "mtime_nanos": 1774465338484317361,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/interface.d.ts": {
+      "size": 1328,
+      "mtime_nanos": 1774465338495328869,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/index.d.ts.map": {
+      "size": 465,
+      "mtime_nanos": 1774465338532340579,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/storage/schema.d.ts": {
+      "size": 10795,
+      "mtime_nanos": 1774465338527844808,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/validator.d.ts.map": {
+      "size": 563,
+      "mtime_nanos": 1774465338492639982,
+      "mode": 420,
+      "is_dir": false
+    },
+    "packages/core/dist/providers/detector.d.ts": {
+      "size": 929,
+      "mtime_nanos": 1774465338490841099,
+      "mode": 420,
+      "is_dir": false
+    }
+  },
+  "order": [
+    "packages/core/.turbo/turbo-typecheck.log",
+    "packages/core/dist/index.d.ts",
+    "packages/core/dist/index.d.ts.map",
+    "packages/core/dist/password.d.ts",
+    "packages/core/dist/password.d.ts.map",
+    "packages/core/dist/providers/detector.d.ts",
+    "packages/core/dist/providers/detector.d.ts.map",
+    "packages/core/dist/providers/index.d.ts",
+    "packages/core/dist/providers/index.d.ts.map",
+    "packages/core/dist/providers/known-providers.d.ts",
+    "packages/core/dist/providers/known-providers.d.ts.map",
+    "packages/core/dist/providers/validator.d.ts",
+    "packages/core/dist/providers/validator.d.ts.map",
+    "packages/core/dist/storage/crypto.d.ts",
+    "packages/core/dist/storage/crypto.d.ts.map",
+    "packages/core/dist/storage/file.d.ts",
+    "packages/core/dist/storage/file.d.ts.map",
+    "packages/core/dist/storage/index.d.ts",
+    "packages/core/dist/storage/index.d.ts.map",
+    "packages/core/dist/storage/interface.d.ts",
+    "packages/core/dist/storage/interface.d.ts.map",
+    "packages/core/dist/storage/key.d.ts",
+    "packages/core/dist/storage/key.d.ts.map",
+    "packages/core/dist/storage/migrate.d.ts",
+    "packages/core/dist/storage/migrate.d.ts.map",
+    "packages/core/dist/storage/postgres.d.ts",
+    "packages/core/dist/storage/postgres.d.ts.map",
+    "packages/core/dist/storage/schema.d.ts",
+    "packages/core/dist/storage/schema.d.ts.map",
+    "packages/core/tsconfig.tsbuildinfo"
+  ]
+}
