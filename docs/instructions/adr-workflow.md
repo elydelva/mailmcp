@@ -15,8 +15,23 @@ pr: ~                   # GitHub PR number, or ~ if not yet opened
 pr_url: ~               # https://github.com/elydelva/mailmcp/pull/<n>
 github_issue: ~         # GitHub Issue number, or ~ if not yet created
 github_issue_url: ~     # https://github.com/elydelva/mailmcp/issues/<n>
+depends_on: []          # ADRs that must be completed before this one can start
+required_by: []         # ADRs that cannot start until this one is completed
 ---
 ```
+
+## Dépendances entre ADRs
+
+Les champs `depends_on` et `required_by` forment un graphe orienté acyclique qui définit l'ordre d'implémentation.
+
+**Règle** : un ADR ne peut passer à `in-progress` que si tous ses `depends_on` sont à `completed`.
+
+Le graphe complet et l'ordre d'implémentation recommandé sont maintenus dans [`docs/adr/README.md`](../adr/README.md).
+
+Quand on écrit ou modifie un ADR :
+1. Renseigner `depends_on` avec les ADRs dont la complétion est un prérequis.
+2. Mettre à jour `required_by` sur chacun des ADRs listés dans `depends_on` (relation symétrique).
+3. Mettre à jour la table de dépendances et l'ordre dans `docs/adr/README.md`.
 
 ## Lifecycle — keep `status` up to date
 
