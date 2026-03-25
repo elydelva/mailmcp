@@ -2,11 +2,11 @@
 issue: ADR-014
 title: Split @mailmcp/core by responsibility
 branch: refactor/core-package-split
-status: todo
-pr: ~
-pr_url: ~
-github_issue: ~
-github_issue_url: ~
+status: in-progress
+pr: 42
+pr_url: https://github.com/elydelva/mailmcp/pull/42
+github_issue: 41
+github_issue_url: https://github.com/elydelva/mailmcp/issues/41
 depends_on: [ADR-010, ADR-013]
 required_by: []
 ---
