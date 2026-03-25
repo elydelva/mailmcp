@@ -4,6 +4,8 @@
  */
 
 import { randomUUID } from "node:crypto";
+import { mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { JSONFilePreset } from "lowdb/node";
 import { decrypt, encrypt } from "./crypto.js";
 import type {
@@ -20,21 +22,31 @@ interface DbSchema {
 
 const DEFAULTS: DbSchema = { users: [], accounts: [] };
 
-async function getDb(path: string) {
-  return JSONFilePreset<DbSchema>(path, DEFAULTS);
-}
+type Db = Awaited<ReturnType<typeof JSONFilePreset<DbSchema>>>;
 
 export class FileStorageAdapter implements StorageAdapter {
   private readonly dbPath: string;
+  private dbPromise: Promise<Db> | null = null;
 
   constructor(dbPath = "data/db.json") {
     this.dbPath = dbPath;
   }
 
+  private getDb(): Promise<Db> {
+    if (!this.dbPromise) {
+      mkdirSync(dirname(this.dbPath), { recursive: true });
+      this.dbPromise = JSONFilePreset<DbSchema>(
+        this.dbPath,
+        structuredClone(DEFAULTS),
+      );
+    }
+    return this.dbPromise;
+  }
+
   // ── Users ──────────────────────────────────────────────────────────────────
 
   async findOrCreateUser(sub: string): Promise<User> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
     let user = db.data.users.find((u) => u.oauthSub === sub);
     if (!user) {
       user = { id: randomUUID(), oauthSub: sub, createdAt: new Date() };
@@ -47,7 +59,7 @@ export class FileStorageAdapter implements StorageAdapter {
   // ── Accounts ───────────────────────────────────────────────────────────────
 
   async listAccounts(userId: string): Promise<EmailAccount[]> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
     return db.data.accounts
       .filter((a) => a.userId === userId)
       .map(decryptAccount);
@@ -57,7 +69,7 @@ export class FileStorageAdapter implements StorageAdapter {
     userId: string,
     accountId: string,
   ): Promise<EmailAccount | null> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
     const account = db.data.accounts.find(
       (a) => a.userId === userId && a.id === accountId,
     );
@@ -68,7 +80,7 @@ export class FileStorageAdapter implements StorageAdapter {
     userId: string,
     data: CreateAccountInput,
   ): Promise<EmailAccount> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
 
     // First account for this user becomes the default automatically.
     const isFirst = !db.data.accounts.some((a) => a.userId === userId);
@@ -101,7 +113,7 @@ export class FileStorageAdapter implements StorageAdapter {
     accountId: string,
     data: Partial<CreateAccountInput>,
   ): Promise<EmailAccount> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
     const idx = db.data.accounts.findIndex(
       (a) => a.userId === userId && a.id === accountId,
     );
@@ -130,13 +142,14 @@ export class FileStorageAdapter implements StorageAdapter {
   }
 
   async deleteAccount(userId: string, accountId: string): Promise<void> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
     const before = db.data.accounts.length;
     db.data.accounts = db.data.accounts.filter(
       (a) => !(a.userId === userId && a.id === accountId),
     );
-    if (db.data.accounts.length === before)
+    if (db.data.accounts.length === before) {
       throw new Error(`Account ${accountId} not found`);
+    }
 
     // If we deleted the default, promote the oldest remaining account.
     const remaining = db.data.accounts.filter((a) => a.userId === userId);
@@ -147,7 +160,7 @@ export class FileStorageAdapter implements StorageAdapter {
   }
 
   async setDefaultAccount(userId: string, accountId: string): Promise<void> {
-    const db = await getDb(this.dbPath);
+    const db = await this.getDb();
     let found = false;
     for (const account of db.data.accounts) {
       if (account.userId !== userId) continue;
@@ -165,15 +178,6 @@ export class FileStorageAdapter implements StorageAdapter {
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Returns a copy of the account with `passwordEnc` decrypted into a transient
- * `password` field.  The raw `passwordEnc` blob is intentionally kept so
- * callers that need the plaintext can access it via `decrypt(account.passwordEnc)`.
- */
 function decryptAccount(account: EmailAccount): EmailAccount {
-  return {
-    ...account,
-    // Expose plaintext only transiently; never written back to disk.
-    passwordEnc: account.passwordEnc, // keep encrypted blob as-is
-  };
+  return { ...account };
 }
