@@ -2,7 +2,7 @@ import type { ToolContext } from "@mailmcp/core";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import type { FastifyPluginAsync } from "fastify";
-import { registerAccountTools } from "./tools.js";
+import { registerAccountTools, registerEmailTools } from "./tools.js";
 
 export const mcpRoutes: FastifyPluginAsync = async (app) => {
   const ctx: ToolContext = {
@@ -13,6 +13,7 @@ export const mcpRoutes: FastifyPluginAsync = async (app) => {
 
   const mcpServer = new McpServer({ name: "mailmcp", version: "0.1.0" });
   registerAccountTools(mcpServer, ctx);
+  registerEmailTools(mcpServer, ctx);
 
   const transport = new StreamableHTTPServerTransport({ sessionIdGenerator: undefined });
   await mcpServer.connect(transport);

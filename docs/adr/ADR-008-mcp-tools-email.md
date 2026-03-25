@@ -2,7 +2,7 @@
 issue: ADR-008
 title: MCP Tools — Email Operations
 branch: feat/mcp-tools-email
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 8
