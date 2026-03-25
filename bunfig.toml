@@ -1,0 +1,4 @@
+[test]
+# Run each test file in an isolated worker to prevent module mock contamination
+smolStackSize = 65536
+exclude = ["**/dist/**", "**/node_modules/**"]

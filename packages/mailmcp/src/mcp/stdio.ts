@@ -1,10 +1,9 @@
-import type { ToolContext } from "@mailmcp/core";
+import { createStorage, initEncryptionKey } from "@mailmcp/core";
+import type { ToolContext } from "@mailmcp/tools";
 import {
-  createStorage,
   deleteAccount,
   deleteEmail,
   getEmail,
-  initEncryptionKey,
   listAccounts,
   listEmails,
   markEmail,
@@ -13,7 +12,7 @@ import {
   sendEmail,
   setDefaultAccount,
   setupAccount,
-} from "@mailmcp/core";
+} from "@mailmcp/tools";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -29,8 +28,9 @@ function withErrorHandling<T>(handler: ToolHandler<T>, toolName: string): ToolHa
       return await handler(params);
     } catch (err) {
       let msg = err instanceof Error ? err.message : String(err);
-      if (err instanceof Error && "responseText" in err && err.responseText) {
-        msg = err.responseText;
+      if (err instanceof Error && "responseText" in err) {
+        const rt = (err as { responseText?: unknown }).responseText;
+        if (typeof rt === "string" && rt) msg = rt;
       }
       logger.error(
         { tool: toolName, error: msg, stack: err instanceof Error ? err.stack : undefined, params },
@@ -112,10 +112,23 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       limit: z.number().optional(),
       returnBody: z.boolean().optional(),
     },
-    withErrorHandling(async (params) => {
-      const result = await listEmails(ctx, { page: 1, limit: 20, ...params });
-      return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "list_emails"),
+    withErrorHandling(
+      async (params: {
+        accountId?: string;
+        mailbox?: string;
+        page?: number;
+        limit?: number;
+        returnBody?: boolean;
+      }) => {
+        const result = await listEmails(ctx, {
+          page: params.page ?? 1,
+          limit: params.limit ?? 20,
+          ...params,
+        });
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      },
+      "list_emails",
+    ),
   );
 
   server.tool(
@@ -126,8 +139,8 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       mailbox: z.string().optional(),
       uid: z.number(),
     },
-    withErrorHandling(async (params) => {
-      const result = await getEmail(ctx, { mailbox: "INBOX", ...params });
+    withErrorHandling(async (params: { accountId?: string; mailbox?: string; uid: number }) => {
+      const result = await getEmail(ctx, { mailbox: params.mailbox ?? "INBOX", ...params });
       return { content: [{ type: "text", text: JSON.stringify(result) }] };
     }, "get_email"),
   );
@@ -141,10 +154,13 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       query: z.string(),
       limit: z.number().optional(),
     },
-    withErrorHandling(async (params) => {
-      const result = await searchEmails(ctx, params);
-      return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "search_emails"),
+    withErrorHandling(
+      async (params: { accountId?: string; mailbox?: string; query: string; limit?: number }) => {
+        const result = await searchEmails(ctx, params);
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      },
+      "search_emails",
+    ),
   );
 
   server.tool(
@@ -159,10 +175,21 @@ export async function startStdioServer(dataDir: string): Promise<void> {
       cc: z.array(z.string()).optional(),
       bcc: z.array(z.string()).optional(),
     },
-    withErrorHandling(async (params) => {
-      const result = await sendEmail(ctx, params);
-      return { content: [{ type: "text", text: JSON.stringify(result) }] };
-    }, "send_email"),
+    withErrorHandling(
+      async (params: {
+        accountId: string;
+        to: string[];
+        subject: string;
+        text?: string;
+        html?: string;
+        cc?: string[];
+        bcc?: string[];
+      }) => {
+        const result = await sendEmail(ctx, params);
+        return { content: [{ type: "text", text: JSON.stringify(result) }] };
+      },
+      "send_email",
+    ),
   );
 
   server.tool(

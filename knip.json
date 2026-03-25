@@ -1,10 +1,20 @@
 {
   "workspaces": {
-    ".": {},
+    ".": {
+      "ignoreDependencies": ["bun-types"]
+    },
     "packages/core": {
       "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["@sinclair/typebox"],
-      "ignore": ["src/tools/**"]
+      "ignoreDependencies": ["@sinclair/typebox"]
+    },
+    "packages/imap": {
+      "project": ["src/**/*.ts"]
+    },
+    "packages/smtp": {
+      "project": ["src/**/*.ts"]
+    },
+    "packages/tools": {
+      "project": ["src/**/*.ts"]
     },
     "packages/server": {
       "project": ["src/**/*.ts"],
@@ -17,5 +27,5 @@
     }
   },
   "ignoreExportsUsedInFile": true,
-  "ignore": [".claude/**"]
+  "ignore": []
 }

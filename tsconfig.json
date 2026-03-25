@@ -1,8 +1,7 @@
 {
-  "files": [],
-  "references": [
-    { "path": "packages/core" },
-    { "path": "packages/mailmcp" },
-    { "path": "packages/server" }
-  ]
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "files": []
 }

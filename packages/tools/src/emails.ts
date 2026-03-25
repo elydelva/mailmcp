@@ -1,3 +1,5 @@
+import { decryptToString } from "@mailmcp/core";
+import type { ImapPool } from "@mailmcp/imap";
 import {
   deleteEmail as imapDeleteEmail,
   getEmail as imapGetEmail,
@@ -5,17 +7,15 @@ import {
   listFolders as imapListFolders,
   markEmail as imapMarkEmail,
   moveEmail as imapMoveEmail,
+  imapPool,
   searchEmails as imapSearchEmails,
-} from "../imap/operations.js";
-import type { ImapPool } from "../imap/pool.js";
-import { imapPool } from "../imap/pool.js";
-import { decryptToString } from "../password.js";
-import type { AttachmentInput } from "../smtp/operations.js";
+} from "@mailmcp/imap";
+import type { AttachmentInput } from "@mailmcp/smtp";
 import {
   forwardEmail as smtpForwardEmail,
   replyEmail as smtpReplyEmail,
   sendEmail as smtpSendEmail,
-} from "../smtp/operations.js";
+} from "@mailmcp/smtp";
 import type { ToolContext } from "./context.js";
 
 // ── Deps injection ───────────────────────────────────────────────────────────

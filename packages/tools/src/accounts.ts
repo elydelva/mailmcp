@@ -1,7 +1,5 @@
-import { detectProvider } from "../providers/detector.js";
-import type { ProviderConfig } from "../providers/known-providers.js";
-import type { ValidationResult } from "../providers/validator.js";
-import { validateConnection } from "../providers/validator.js";
+import type { ProviderConfig, ValidationResult } from "@mailmcp/core";
+import { detectProvider, validateConnection } from "@mailmcp/core";
 import type { ToolContext } from "./context.js";
 
 // ── Types ────────────────────────────────────────────────────────────────────

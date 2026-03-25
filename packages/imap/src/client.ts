@@ -1,5 +1,5 @@
+import type { EmailAccount } from "@mailmcp/core";
 import { ImapFlow } from "imapflow";
-import type { EmailAccount } from "../storage/interface.js";
 
 /**
  * Factory to create a configured ImapFlow client for the given account.

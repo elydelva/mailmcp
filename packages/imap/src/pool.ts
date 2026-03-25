@@ -1,5 +1,5 @@
+import type { EmailAccount } from "@mailmcp/core";
 import type { ImapFlow } from "imapflow";
-import type { EmailAccount } from "../storage/interface.js";
 import { createImapClient } from "./client.js";
 
 const TTL_MS = 5 * 60 * 1000; // 5 minutes

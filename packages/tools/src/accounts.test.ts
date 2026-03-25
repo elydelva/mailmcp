@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import type { DetectionResult } from "../providers/detector.js";
-import type { ValidationResult } from "../providers/validator.js";
 import type {
   CreateAccountInput,
+  DetectionResult,
   EmailAccount,
   StorageAdapter,
   User,
-} from "../storage/interface.js";
+  ValidationResult,
+} from "@mailmcp/core";
 import { deleteAccount, listAccounts, setDefaultAccount, setupAccount } from "./accounts.js";
 import type { ToolContext } from "./context.js";
 
