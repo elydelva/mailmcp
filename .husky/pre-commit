@@ -1,4 +1,3 @@
-bun run lint
-bun biome format .
+bunx lint-staged
 bun run knip
 bun test
