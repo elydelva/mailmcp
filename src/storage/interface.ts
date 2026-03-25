@@ -41,7 +41,11 @@ export interface StorageAdapter {
   listAccounts(userId: string): Promise<EmailAccount[]>;
   getAccount(userId: string, accountId: string): Promise<EmailAccount | null>;
   createAccount(userId: string, data: CreateAccountInput): Promise<EmailAccount>;
-  updateAccount(userId: string, accountId: string, data: Partial<CreateAccountInput>): Promise<EmailAccount>;
+  updateAccount(
+    userId: string,
+    accountId: string,
+    data: Partial<CreateAccountInput>,
+  ): Promise<EmailAccount>;
   deleteAccount(userId: string, accountId: string): Promise<void>;
   setDefaultAccount(userId: string, accountId: string): Promise<void>;
 }

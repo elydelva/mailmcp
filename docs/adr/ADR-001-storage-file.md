@@ -2,7 +2,7 @@
 issue: ADR-001
 title: Storage Layer — Interface + File Backend
 branch: feat/storage-file-backend
-status: todo
+status: in-progress
 ---
 
 # ADR-001 — Storage Layer: File Backend
@@ -17,8 +17,8 @@ Two backends are planned; this issue covers the interface and the lightweight fi
 - Passwords encrypted at rest with AES-256-GCM using `ENCRYPTION_KEY`
 
 ## Goals / Commits
-- [ ] `feat(storage): define StorageAdapter interface and core types`
-- [ ] `feat(storage): implement AES-256-GCM encrypt/decrypt helpers`
-- [ ] `feat(storage): implement file backend with lowdb`
-- [ ] `test(storage): unit tests for file backend CRUD`
-- [ ] `feat(storage): storage factory selecting backend via STORAGE_BACKEND env`
+- [x] `feat(storage): define StorageAdapter interface and core types`
+- [x] `feat(storage): implement AES-256-GCM encrypt/decrypt helpers`
+- [x] `feat(storage): implement file backend with lowdb`
+- [x] `test(storage): unit tests for file backend CRUD`
+- [x] `feat(storage): storage factory selecting backend via STORAGE_BACKEND env`

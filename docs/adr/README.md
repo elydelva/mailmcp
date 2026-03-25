@@ -6,7 +6,7 @@ Each issue maps to a git branch and an ADR describing goals and progress.
 | ADR | Title | Branch | Status |
 |-----|-------|--------|--------|
 | [ADR-000](ADR-000-project-setup.md) | Project Setup & Tooling | `setup/project-init` | completed |
-| [ADR-001](ADR-001-storage-file.md) | Storage — File Backend | `feat/storage-file-backend` | todo |
+| [ADR-001](ADR-001-storage-file.md) | Storage — File Backend | `feat/storage-file-backend` | in-progress |
 | [ADR-002](ADR-002-storage-postgres.md) | Storage — PostgreSQL Backend | `feat/storage-postgres-backend` | todo |
 | [ADR-003](ADR-003-oauth-endpoints.md) | OAuth 2.1 Endpoints | `feat/oauth-endpoints` | todo |
 | [ADR-004](ADR-004-provider-detection.md) | Provider Detection & Setup Wizard | `feat/provider-detection` | todo |
