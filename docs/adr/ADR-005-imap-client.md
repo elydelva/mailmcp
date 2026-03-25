@@ -7,6 +7,8 @@ pr: ~
 pr_url: ~
 github_issue: 5
 github_issue_url: https://github.com/elydelva/mailmcp/issues/5
+depends_on: [ADR-004, ADR-010]
+required_by: [ADR-008]
 ---
 
 # ADR-005 — IMAP Client
@@ -14,6 +16,8 @@ github_issue_url: https://github.com/elydelva/mailmcp/issues/5
 ## Context
 All email read operations go through IMAP. Connections are expensive to establish
 so a pool is needed.
+
+**Scope : `packages/core/imap/`.** Pas de dépendance vers un transport. Le pool est instancié une fois par processus (stdio ou server) et passé aux handlers de `core/tools/`.
 
 ## Decisions
 - Client: `imapflow` (Promise-based, actively maintained by Postal Systems)

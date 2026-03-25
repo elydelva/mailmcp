@@ -7,6 +7,8 @@ pr: ~
 pr_url: ~
 github_issue: 2
 github_issue_url: https://github.com/elydelva/mailmcp/issues/2
+depends_on: [ADR-001, ADR-010]
+required_by: [ADR-007, ADR-008]
 ---
 
 # ADR-002 — Storage Layer: PostgreSQL Backend
