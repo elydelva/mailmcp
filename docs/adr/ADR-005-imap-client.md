@@ -1,0 +1,28 @@
+---
+issue: ADR-005
+title: IMAP Client & Connection Pool
+branch: feat/imap-client
+status: todo
+---
+
+# ADR-005 — IMAP Client
+
+## Context
+All email read operations go through IMAP. Connections are expensive to establish
+so a pool is needed.
+
+## Decisions
+- Client: `imapflow` (Promise-based, actively maintained by Postal Systems)
+- Pool: `Map<\`\${userId}:\${accountId}\`, ImapFlow>` with 5-minute idle TTL
+- Max 2 simultaneous connections per account
+- Configurable timeout via `IMAP_TIMEOUT_MS`
+
+## Goals / Commits
+- [ ] `feat(imap): implement ImapFlow wrapper with connect/disconnect lifecycle`
+- [ ] `feat(imap): implement connection pool with TTL eviction`
+- [ ] `feat(imap): implement list_emails with pagination`
+- [ ] `feat(imap): implement get_email (full headers + body)`
+- [ ] `feat(imap): implement search_emails with IMAP SEARCH criteria`
+- [ ] `feat(imap): implement move_email, delete_email, mark_email operations`
+- [ ] `feat(imap): implement list_folders`
+- [ ] `test(imap): unit tests for IMAP operations`

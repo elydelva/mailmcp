@@ -1,0 +1,84 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hydra
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: hydra
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hydra"]
+      interval: 5s
+      retries: 10
+
+  hydra-migrate:
+    image: oryd/hydra:v2.2.0
+    command: migrate sql -e --yes
+    environment:
+      DSN: postgres://hydra:${POSTGRES_PASSWORD}@postgres:5432/hydra?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+
+  hydra:
+    image: oryd/hydra:v2.2.0
+    restart: unless-stopped
+    command: serve all --dev
+    environment:
+      DSN: postgres://hydra:${POSTGRES_PASSWORD}@postgres:5432/hydra?sslmode=disable
+      URLS_SELF_ISSUER: ${HYDRA_PUBLIC_URL}
+      URLS_CONSENT: ${AUTH_UI_URL}/consent
+      URLS_LOGIN: ${AUTH_UI_URL}/login
+      URLS_LOGOUT: ${AUTH_UI_URL}/logout
+      SECRETS_SYSTEM: ${HYDRA_SECRET}
+      OIDC_DYNAMIC_CLIENT_REGISTRATION_ENABLED: "true"
+      OIDC_DYNAMIC_CLIENT_REGISTRATION_DEFAULT_SCOPE: openid,offline_access
+      OAUTH2_PKCE_ENFORCED_FOR_PUBLIC_CLIENTS: "true"
+      STRATEGIES_ACCESS_TOKEN: opaque
+      TTL_ACCESS_TOKEN: 1h
+      TTL_REFRESH_TOKEN: 720h
+    depends_on:
+      hydra-migrate:
+        condition: service_completed_successfully
+    expose:
+      - "4444"
+      - "4445"
+
+  hydra-ui:
+    image: oryd/hydra-login-consent-node:latest
+    restart: unless-stopped
+    environment:
+      HYDRA_ADMIN_URL: http://hydra:4445
+    expose:
+      - "3000"
+    depends_on:
+      - hydra
+
+  mailmcp:
+    image: mailmcp:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      BASE_URL: https://${MCP_MAIL_DOMAIN}
+      HYDRA_PUBLIC_URL: https://${HYDRA_DOMAIN}
+      HYDRA_ADMIN_URL: http://hydra:4445
+      HYDRA_API_KEY: ${HYDRA_API_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      STORAGE_BACKEND: ${STORAGE_BACKEND:-postgres}
+      DATABASE_URL: postgresql://mcp:${MCP_DB_PASSWORD}@postgres:5432/mcp_mail
+      DATA_DIR: /data
+    volumes:
+      - mcp_data:/data
+    depends_on:
+      - hydra
+    expose:
+      - "3000"
+
+volumes:
+  postgres_data:
+  mcp_data:

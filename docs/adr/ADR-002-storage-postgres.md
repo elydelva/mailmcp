@@ -1,0 +1,23 @@
+---
+issue: ADR-002
+title: Storage Layer — PostgreSQL Backend
+branch: feat/storage-postgres-backend
+status: todo
+---
+
+# ADR-002 — Storage Layer: PostgreSQL Backend
+
+## Context
+Production multi-user deployments need a proper relational database.
+
+## Decisions
+- Drizzle ORM with drizzle-kit for schema + migrations
+- Schema: `users` and `email_accounts` tables (see spec)
+- Implements the same `StorageAdapter` interface as the file backend
+
+## Goals / Commits
+- [ ] `feat(storage): install drizzle-orm and drizzle-kit`
+- [ ] `feat(storage): define schema with users and email_accounts tables`
+- [ ] `feat(storage): implement postgres StorageAdapter with Drizzle`
+- [ ] `feat(storage): add initial migration via drizzle-kit`
+- [ ] `test(storage): integration tests for postgres backend`

@@ -1,0 +1,26 @@
+---
+issue: ADR-003
+title: OAuth 2.1 — Protected Resource & DCR Proxy
+branch: feat/oauth-endpoints
+status: todo
+---
+
+# ADR-003 — OAuth 2.1 Endpoints
+
+## Context
+The MCP server must expose OAuth endpoints required by the MCP spec (2025-11-25)
+to be compatible with Claude.ai web, mobile, and desktop.
+
+## Decisions
+- `GET /.well-known/oauth-protected-resource` (RFC 9728)
+- `GET /.well-known/openid-configuration` proxy to Hydra
+- `POST /oauth2/register` DCR proxy to Hydra + empty-field cleanup (Hydra + Zod bug workaround)
+- Token validation via Hydra admin introspection endpoint
+- Fastify middleware extracting `sub` from introspection for user scoping
+
+## Goals / Commits
+- [ ] `feat(auth): add /.well-known/oauth-protected-resource endpoint`
+- [ ] `feat(auth): add openid-configuration proxy to Hydra`
+- [ ] `feat(auth): add DCR proxy with empty-field cleanup`
+- [ ] `feat(auth): add token introspection middleware`
+- [ ] `test(auth): test OAuth endpoints with mock Hydra responses`
