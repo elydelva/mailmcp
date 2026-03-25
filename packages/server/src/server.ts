@@ -1,6 +1,7 @@
 import { createStorage } from "@mailmcp/core";
 import Fastify from "fastify";
 import { accountsRoutes } from "./api/accounts.js";
+import { dcrRoutes, introspectMiddleware, loadOAuthConfig, wellKnownRoutes } from "./auth/index.js";
 import { mcpRoutes } from "./mcp/transport.js";
 
 export async function buildServer() {
@@ -14,6 +15,11 @@ export async function buildServer() {
   server.decorate("storage", createStorage());
 
   server.get("/health", async () => ({ status: "ok", service: "mailmcp" }));
+
+  const oauthConfig = loadOAuthConfig();
+  server.register(wellKnownRoutes, { config: oauthConfig });
+  server.register(dcrRoutes, { config: oauthConfig });
+  server.register(introspectMiddleware, { config: oauthConfig });
 
   server.register(accountsRoutes);
   server.register(mcpRoutes);
