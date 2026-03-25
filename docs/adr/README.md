@@ -9,8 +9,8 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 |-----|-------|---------|--------|
 | [ADR-000](ADR-000-project-setup.md) | Project Setup & Tooling | — | completed |
 | [ADR-001](ADR-001-storage-file.md) | Storage — File Backend | `core` | completed |
-| [ADR-002](ADR-002-storage-postgres.md) | Storage — PostgreSQL Backend | `core` | todo |
-| [ADR-003](ADR-003-oauth-endpoints.md) | OAuth 2.1 Endpoints | `server` | todo |
+| [ADR-002](ADR-002-storage-postgres.md) | Storage — PostgreSQL Backend | `core` | in-progress |
+| [ADR-003](ADR-003-oauth-endpoints.md) | OAuth 2.1 Endpoints | `server` | completed |
 | [ADR-004](ADR-004-provider-detection.md) | Provider Detection | `core` | completed |
 | [ADR-005](ADR-005-imap-client.md) | IMAP Client & Connection Pool | `core` | completed |
 | [ADR-006](ADR-006-smtp-client.md) | SMTP Client | `core` | completed |
@@ -18,7 +18,7 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-008](ADR-008-mcp-tools-email.md) | MCP Tools — Email Operations | `core` + `server` | completed |
 | [ADR-009](ADR-009-docker-deployment.md) | Docker & Production Deployment | `server` | todo |
 | [ADR-010](ADR-010-monorepo-architecture.md) | Monorepo Architecture | — | completed |
-| [ADR-011](ADR-011-cli-workspace.md) | CLI Companion & Workspace System | `mailmcp` | todo |
+| [ADR-011](ADR-011-cli-workspace.md) | CLI Companion & Workspace System | `mailmcp` | completed |
 
 ---
 

@@ -2,9 +2,9 @@
 issue: ADR-011
 title: CLI Companion & Workspace System
 branch: feat/cli-workspace
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 24
+pr_url: https://github.com/elydelva/mailmcp/pull/24
 github_issue: ~
 github_issue_url: ~
 depends_on: [ADR-010, ADR-004, ADR-007]
