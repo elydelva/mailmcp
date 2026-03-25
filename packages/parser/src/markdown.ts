@@ -58,8 +58,11 @@ const td = buildTurndown();
  * as preheader spacers: ZWNJ, ZWJ, ZWSP, soft hyphen, BOM, word joiner, etc.
  */
 function stripInvisible(text: string): string {
-  // biome-ignore lint/suspicious/noMisleadingCharacterClass: intentional unicode range
-  return text.replace(/[\u00AD\u200B\u200C\u200D\u2060\uFEFF]+/g, "").trim();
+  return text
+    .replace(/\u00AD|\u034F|\u200B|\u200C|\u200D|\u2060|\uFEFF/g, "")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/^\s+/gm, "")
+    .trim();
 }
 
 export function toMarkdown(html: string): string {
