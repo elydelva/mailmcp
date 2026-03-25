@@ -2,11 +2,11 @@
 issue: ADR-013
 title: TypeScript project references — monorepo typecheck scalability
 branch: chore/typescript-project-references
-status: todo
-pr: ~
-pr_url: ~
-github_issue: ~
-github_issue_url: ~
+status: in-progress
+pr: 33
+pr_url: https://github.com/elydelva/mailmcp/pull/33
+github_issue: 35
+github_issue_url: https://github.com/elydelva/mailmcp/issues/35
 depends_on: [ADR-012]
 required_by: []
 ---
