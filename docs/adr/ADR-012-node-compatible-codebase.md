@@ -2,11 +2,11 @@
 issue: ADR-012
 title: Node.js-compatible codebase — Bun as runtime only
 branch: refactor/node-compatible-codebase
-status: todo
-pr: ~
-pr_url: ~
-github_issue: ~
-github_issue_url: ~
+status: in-progress
+pr: 32
+pr_url: https://github.com/elydelva/mailmcp/pull/32
+github_issue: 34
+github_issue_url: https://github.com/elydelva/mailmcp/issues/34
 depends_on: [ADR-010, ADR-011]
 required_by: [ADR-013]
 ---
