@@ -1,0 +1,12 @@
+.git
+.claude
+node_modules
+packages/*/node_modules
+packages/mailmcp/src
+packages/mailmcp/node_modules
+.env
+.env.*
+!.env.example
+coverage
+*.md
+docs
