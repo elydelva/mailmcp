@@ -32,10 +32,29 @@ Ouvrir une Draft PR **dès que la branche a un premier commit significatif**, m�
 
 Une Draft PR ne déclenche pas de review requests. La convertir en PR normale quand le travail est prêt.
 
+## Nommage des PRs
+
+Le titre d'une PR **n'est pas** un message de commit. Il doit être lisible par un humain qui parcourt la liste des PRs, pas par un parser de changelog.
+
+Format : `[TYPE/Nom de la feature]` suivi d'une courte phrase en langage naturel.
+
+```
+[FEAT/Storage]    Implémentation du backend fichier avec chiffrement AES-256
+[FIX/IMAP]        Correction du timeout de connexion sur les serveurs lents
+[DOCS/ADR]        Workflow ADR, templates et hub d'instructions IA
+[CHORE/CI]        Découplage SonarCloud et publication GHCR
+```
+
+Types disponibles : `FEAT`, `FIX`, `DOCS`, `CHORE`, `REFACTOR`, `PERF`, `TEST`
+
+> Les Conventional Commits restent dans les messages de commit — ils alimentent le changelog automatique.
+> Le titre de PR, lui, sert la lisibilité humaine dans l'interface GitHub.
+
 ## Comment synchroniser (règles concrètes)
 
-1. **Toujours lier** une PR à son issue avec `Closes #<N>` dans le corps de la PR.
-2. **Toujours renseigner** `pr`, `pr_url`, `github_issue`, `github_issue_url` dans le frontmatter de l'ADR correspondant (voir [`adr-workflow.md`](./adr-workflow.md)).
-3. **Utiliser les templates** de `docs/templates/` pour ouvrir issues et PRs (voir [`templates.md`](./templates.md)).
-4. **Ne pas dupliquer le contexte** : le corps d'une issue ou PR peut résumer, mais la décision technique durable doit être dans l'ADR ou le commit.
-5. **Ne pas bloquer sur GitHub** : si l'interface est inaccessible, le travail continue — git suffit. La sync se fait a posteriori.
+1. **Nommer la PR** selon le format `[TYPE/Nom]` décrit ci-dessus — jamais comme un commit.
+2. **Toujours lier** une PR à son issue avec `Closes #<N>` dans le corps de la PR.
+3. **Toujours renseigner** `pr`, `pr_url`, `github_issue`, `github_issue_url` dans le frontmatter de l'ADR correspondant (voir [`adr-workflow.md`](./adr-workflow.md)).
+4. **Utiliser les templates** de `docs/templates/` pour ouvrir issues et PRs (voir [`templates.md`](./templates.md)).
+5. **Ne pas dupliquer le contexte** : le corps d'une issue ou PR peut résumer, mais la décision technique durable doit être dans l'ADR ou le commit.
+6. **Ne pas bloquer sur GitHub** : si l'interface est inaccessible, le travail continue — git suffit. La sync se fait a posteriori.

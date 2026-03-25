@@ -30,10 +30,12 @@ gh issue create --title "ADR-00X — …" --body-file docs/templates/issues/feat
 
 ## Comment créer une PR avec le template
 
+Le titre suit le format `[TYPE/Nom de la feature]` — voir [`github-sync.md`](./github-sync.md#nommage-des-prs).
+
 ```sh
 # Draft PR dès le premier commit significatif
 gh pr create --draft \
-  --title "feat(<scope>): …" \
+  --title "[FEAT/Storage] Implémentation du backend fichier avec chiffrement AES-256" \
   --body-file docs/templates/pr/feature.md \
   --base main
 
