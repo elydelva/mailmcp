@@ -9,6 +9,7 @@ import {
   imapPool,
   searchEmails as imapSearchEmails,
 } from "@mailmcp/imap";
+import { renderEmail } from "@mailmcp/parser";
 import type { AttachmentInput } from "@mailmcp/smtp";
 import {
   forwardEmail as smtpForwardEmail,
@@ -164,7 +165,14 @@ export async function getEmail(ctx: ToolContext, params: GetEmailParams, _deps: 
   const pool = _deps.pool ?? ctx.imapPool ?? imapPool;
   const client = await pool.getClient(ctx.userId, account, password);
   const email = await imapGetEmail(client, mailbox, uid);
-  return { email };
+  if (!email) return { email };
+  const rendered = email.source ? await renderEmail(email.source) : null;
+  return {
+    email: {
+      ...email,
+      ...(rendered ? { markdown: rendered.markdown, plainText: rendered.plainText } : {}),
+    },
+  };
 }
 
 export async function listFolders(

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mailmcp/imap": "workspace:*",
+    "@mailmcp/parser": "workspace:*",
     "@mailmcp/providers": "workspace:*",
     "@mailmcp/smtp": "workspace:*",
     "@mailmcp/storage": "workspace:*",
