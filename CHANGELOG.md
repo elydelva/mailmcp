@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.2.2...mailmcp-monorepo-v0.2.3) (2026-03-25)
+
+
+### Bug Fixes
+
+* **ci:** add missing dockerfile path in release-please docker job ([7ff6620](https://github.com/elydelva/mailmcp/commit/7ff66205379704a4f2038db824702726a11796d5))
+
 ## [0.2.2](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.2.1...mailmcp-monorepo-v0.2.2) (2026-03-25)
 
 
