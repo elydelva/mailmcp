@@ -2,8 +2,11 @@ FROM oven/bun:1-alpine AS builder
 WORKDIR /app
 
 # Install dependencies (workspace-aware: copy all package manifests first)
-COPY package.json bun.lock ./
+COPY package.json bun.lock bunfig.toml ./
 COPY packages/core/package.json ./packages/core/
+COPY packages/imap/package.json ./packages/imap/
+COPY packages/smtp/package.json ./packages/smtp/
+COPY packages/tools/package.json ./packages/tools/
 COPY packages/server/package.json ./packages/server/
 COPY packages/mailmcp/package.json ./packages/mailmcp/
 RUN bun install --frozen-lockfile
