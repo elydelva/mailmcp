@@ -2,9 +2,9 @@
 issue: ADR-008
 title: MCP Tools — Email Operations
 branch: feat/mcp-tools-email
-status: in-progress
-pr: ~
-pr_url: ~
+status: completed
+pr: 22
+pr_url: https://github.com/elydelva/mailmcp/pull/22
 github_issue: 8
 github_issue_url: https://github.com/elydelva/mailmcp/issues/8
 depends_on: [ADR-007, ADR-005, ADR-006, ADR-010]
