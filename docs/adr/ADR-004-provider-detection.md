@@ -2,7 +2,7 @@
 issue: ADR-004
 title: Provider Detection & Setup Wizard
 branch: feat/provider-detection
-status: todo
+status: in-progress
 pr: ~
 pr_url: ~
 github_issue: 4
