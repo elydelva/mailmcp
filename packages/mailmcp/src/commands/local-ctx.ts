@@ -1,5 +1,5 @@
-import type { ToolContext } from "@mailmcp/core";
 import { createStorage, initEncryptionKey } from "@mailmcp/core";
+import type { ToolContext } from "@mailmcp/tools";
 
 /** Initialises encryption, storage, and returns a local ToolContext. */
 export async function createLocalContext(dataDir: string): Promise<ToolContext> {

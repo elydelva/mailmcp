@@ -1,4 +1,4 @@
-import type { ToolContext } from "@mailmcp/core";
+import type { ToolContext } from "@mailmcp/tools";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import type { FastifyPluginAsync } from "fastify";

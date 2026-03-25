@@ -1,5 +1,5 @@
-import type { ImapPool } from "../imap/pool.js";
-import type { StorageAdapter } from "../storage/interface.js";
+import type { StorageAdapter } from "@mailmcp/core";
+import type { ImapPool } from "@mailmcp/imap";
 
 export interface ToolContext {
   userId: string;

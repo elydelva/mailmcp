@@ -1,4 +1,4 @@
-import type { EmailAccount } from "../storage/interface.js";
+import type { EmailAccount } from "@mailmcp/core";
 import { createSmtpTransport } from "./client.js";
 
 export interface AttachmentInput {
