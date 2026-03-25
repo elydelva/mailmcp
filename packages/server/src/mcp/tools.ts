@@ -22,272 +22,374 @@ import {
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
-function textResult(data: unknown): { content: Array<{ type: "text"; text: string }> } {
+type McpContent = { content: Array<{ type: "text"; text: string }>; isError?: boolean };
+
+function ok(data: unknown): McpContent {
   return { content: [{ type: "text", text: JSON.stringify(data) }] };
 }
 
-// Cast to any to work around TS2589 (type instantiation excessively deep) caused
-// by the MCP SDK's Zod-based tool overloads.
-// biome-ignore lint/suspicious/noExplicitAny: necessary cast for SDK overload resolution
-type AnyServer = any;
+function err(error: unknown): McpContent {
+  const msg = error instanceof Error ? error.message : String(error);
+  return { content: [{ type: "text", text: msg }], isError: true };
+}
 
 export function registerAccountTools(server: McpServer, ctx: ToolContext): void {
-  const s = server as AnyServer;
-
-  s.tool(
+  server.registerTool(
     "setup_account",
-    "Set up a new email account",
     {
-      email: z.string().email(),
-      password: z.string().optional(),
-      name: z.string().optional(),
+      description: "Set up a new email account",
+      inputSchema: z.object({
+        email: z.string().email(),
+        password: z.string().optional(),
+        name: z.string().optional(),
+      }),
     },
-    async ({ email, password, name }: { email: string; password?: string; name?: string }) => {
-      return textResult(await setupAccount(ctx, { email, password, name }));
+    async ({ email, password, name }) => {
+      try {
+        return ok(await setupAccount(ctx, { email, password, name }));
+      } catch (e) {
+        return err(e);
+      }
     },
   );
 
-  s.tool("list_accounts", "List all configured email accounts", {}, async () =>
-    textResult(await listAccounts(ctx, {})),
+  server.registerTool(
+    "list_accounts",
+    {
+      description: "List all configured email accounts",
+      annotations: { readOnlyHint: true },
+    },
+    async () => {
+      try {
+        return ok(await listAccounts(ctx, {}));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "delete_account",
-    "Delete an email account",
     {
-      accountId: z.string(),
+      description: "Delete an email account",
+      inputSchema: z.object({ accountId: z.string() }),
+      annotations: { destructiveHint: true },
     },
-    async ({ accountId }: { accountId: string }) =>
-      textResult(await deleteAccount(ctx, { accountId })),
+    async ({ accountId }) => {
+      try {
+        return ok(await deleteAccount(ctx, { accountId }));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "set_default_account",
-    "Set an account as the default",
     {
-      accountId: z.string(),
+      description: "Set an account as the default",
+      inputSchema: z.object({ accountId: z.string() }),
+      annotations: { idempotentHint: true },
     },
-    async ({ accountId }: { accountId: string }) =>
-      textResult(await setDefaultAccount(ctx, { accountId })),
+    async ({ accountId }) => {
+      try {
+        return ok(await setDefaultAccount(ctx, { accountId }));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 }
 
 export function registerEmailTools(server: McpServer, ctx: ToolContext): void {
-  const s = server as AnyServer;
-
-  s.tool(
+  server.registerTool(
     "list_emails",
-    "List emails in a mailbox with pagination",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      page: z.number().int().positive().optional(),
-      limit: z.number().int().positive().optional(),
-      returnBody: z.boolean().optional(),
+      description: "List emails in a mailbox with pagination",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        page: z.number().int().positive().optional(),
+        limit: z.number().int().positive().optional(),
+        returnBody: z.boolean().optional(),
+      }),
+      annotations: { readOnlyHint: true },
     },
-    async (params: {
-      accountId?: string;
-      mailbox?: string;
-      page?: number;
-      limit?: number;
-      returnBody?: boolean;
-    }) => textResult(await listEmails(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await listEmails(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "get_email",
-    "Get a single email by UID",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      uid: z.number().int().positive(),
+      description: "Get a single email by UID",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        uid: z.number().int().positive(),
+      }),
+      annotations: { readOnlyHint: true },
     },
-    async (params: { accountId?: string; mailbox?: string; uid: number }) =>
-      textResult(await getEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await getEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "list_folders",
-    "List all mailbox folders",
     {
-      accountId: z.string().optional(),
+      description: "List all mailbox folders",
+      inputSchema: z.object({ accountId: z.string().optional() }),
+      annotations: { readOnlyHint: true },
     },
-    async (params: { accountId?: string }) => textResult(await listFolders(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await listFolders(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "get_thread",
-    "Get an email thread by UID",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      uid: z.number().int().positive(),
+      description: "Get an email thread by UID",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        uid: z.number().int().positive(),
+      }),
+      annotations: { readOnlyHint: true },
     },
-    async (params: { accountId?: string; mailbox?: string; uid: number }) =>
-      textResult(await getThread(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await getThread(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "search_emails",
-    "Search emails in a mailbox",
     {
-      accountId: z.string().optional(),
-      mailbox: z.string().optional(),
-      query: z.string(),
-      limit: z.number().int().positive().optional(),
+      description: "Search emails in a mailbox",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        mailbox: z.string().optional(),
+        query: z.string(),
+        limit: z.number().int().positive().optional(),
+      }),
+      annotations: { readOnlyHint: true },
     },
-    async (params: { accountId?: string; mailbox?: string; query: string; limit?: number }) =>
-      textResult(await searchEmails(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await searchEmails(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "send_email",
-    "Send a new email",
     {
-      accountId: z.string().optional(),
-      to: z.union([z.string(), z.array(z.string())]),
-      subject: z.string(),
-      text: z.string().optional(),
-      html: z.string().optional(),
+      description: "Send a new email",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        to: z.union([z.string(), z.array(z.string())]),
+        subject: z.string(),
+        text: z.string().optional(),
+        html: z.string().optional(),
+      }),
     },
-    async (params: {
-      accountId?: string;
-      to: string | string[];
-      subject: string;
-      text?: string;
-      html?: string;
-    }) => textResult(await sendEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await sendEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "reply_email",
-    "Reply to an existing email",
     {
-      accountId: z.string().optional(),
-      originalMessageId: z.string(),
-      originalReferences: z.string().optional(),
-      to: z.union([z.string(), z.array(z.string())]),
-      subject: z.string(),
-      text: z.string().optional(),
-      html: z.string().optional(),
+      description: "Reply to an existing email",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        originalMessageId: z.string(),
+        originalReferences: z.string().optional(),
+        to: z.union([z.string(), z.array(z.string())]),
+        subject: z.string(),
+        text: z.string().optional(),
+        html: z.string().optional(),
+      }),
     },
-    async (params: {
-      accountId?: string;
-      originalMessageId: string;
-      originalReferences?: string;
-      to: string | string[];
-      subject: string;
-      text?: string;
-      html?: string;
-    }) => textResult(await replyEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await replyEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "forward_email",
-    "Forward an email",
     {
-      accountId: z.string().optional(),
-      to: z.union([z.string(), z.array(z.string())]),
-      subject: z.string(),
-      originalText: z.string(),
-      text: z.string().optional(),
-      html: z.string().optional(),
+      description: "Forward an email",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        to: z.union([z.string(), z.array(z.string())]),
+        subject: z.string(),
+        originalText: z.string(),
+        text: z.string().optional(),
+        html: z.string().optional(),
+      }),
     },
-    async (params: {
-      accountId?: string;
-      to: string | string[];
-      subject: string;
-      originalText: string;
-      text?: string;
-      html?: string;
-    }) => textResult(await forwardEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await forwardEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "move_email",
-    "Move an email to another mailbox",
     {
-      accountId: z.string().optional(),
-      uid: z.number().int().positive(),
-      mailbox: z.string(),
-      destination: z.string(),
+      description: "Move an email to another mailbox",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uid: z.number().int().positive(),
+        mailbox: z.string(),
+        destination: z.string(),
+      }),
+      annotations: { destructiveHint: true },
     },
-    async (params: { accountId?: string; uid: number; mailbox: string; destination: string }) =>
-      textResult(await moveEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await moveEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "delete_email",
-    "Permanently delete an email",
     {
-      accountId: z.string().optional(),
-      uid: z.number().int().positive(),
-      mailbox: z.string(),
+      description: "Permanently delete an email",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uid: z.number().int().positive(),
+        mailbox: z.string(),
+      }),
+      annotations: { destructiveHint: true },
     },
-    async (params: { accountId?: string; uid: number; mailbox: string }) =>
-      textResult(await deleteEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await deleteEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "mark_email",
-    "Mark an email as read/unread or flagged/unflagged",
     {
-      accountId: z.string().optional(),
-      uid: z.number().int().positive(),
-      mailbox: z.string(),
-      read: z.boolean().optional(),
-      flagged: z.boolean().optional(),
+      description: "Mark an email as read/unread or flagged/unflagged",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uid: z.number().int().positive(),
+        mailbox: z.string(),
+        read: z.boolean().optional(),
+        flagged: z.boolean().optional(),
+      }),
+      annotations: { idempotentHint: true },
     },
-    async (params: {
-      accountId?: string;
-      uid: number;
-      mailbox: string;
-      read?: boolean;
-      flagged?: boolean;
-    }) => textResult(await markEmail(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await markEmail(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "batch_move",
-    "Move multiple emails to another mailbox",
     {
-      accountId: z.string().optional(),
-      uids: z.array(z.number().int().positive()),
-      mailbox: z.string(),
-      destination: z.string(),
+      description: "Move multiple emails to another mailbox",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uids: z.array(z.number().int().positive()),
+        mailbox: z.string(),
+        destination: z.string(),
+      }),
+      annotations: { destructiveHint: true },
     },
-    async (params: { accountId?: string; uids: number[]; mailbox: string; destination: string }) =>
-      textResult(await batchMove(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await batchMove(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "batch_delete",
-    "Permanently delete multiple emails",
     {
-      accountId: z.string().optional(),
-      uids: z.array(z.number().int().positive()),
-      mailbox: z.string(),
+      description: "Permanently delete multiple emails",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uids: z.array(z.number().int().positive()),
+        mailbox: z.string(),
+      }),
+      annotations: { destructiveHint: true },
     },
-    async (params: { accountId?: string; uids: number[]; mailbox: string }) =>
-      textResult(await batchDelete(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await batchDelete(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 
-  s.tool(
+  server.registerTool(
     "batch_mark",
-    "Mark multiple emails as read/unread or flagged/unflagged",
     {
-      accountId: z.string().optional(),
-      uids: z.array(z.number().int().positive()),
-      mailbox: z.string(),
-      read: z.boolean().optional(),
-      flagged: z.boolean().optional(),
+      description: "Mark multiple emails as read/unread or flagged/unflagged",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uids: z.array(z.number().int().positive()),
+        mailbox: z.string(),
+        read: z.boolean().optional(),
+        flagged: z.boolean().optional(),
+      }),
+      annotations: { idempotentHint: true },
     },
-    async (params: {
-      accountId?: string;
-      uids: number[];
-      mailbox: string;
-      read?: boolean;
-      flagged?: boolean;
-    }) => textResult(await batchMark(ctx, params)),
+    async (params) => {
+      try {
+        return ok(await batchMark(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
   );
 }

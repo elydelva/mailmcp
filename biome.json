@@ -31,6 +31,14 @@
     }
   },
   "files": {
-    "includes": ["**", "!node_modules", "!dist", "!drizzle", "!.claude"]
+    "includes": [
+      "**",
+      "!node_modules",
+      "!dist",
+      "!drizzle",
+      "!.claude",
+      "!**/.turbo",
+      "!**/*.tsbuildinfo"
+    ]
   }
 }
