@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.6...mailmcp-monorepo-v0.6.0) (2026-03-27)
+
+
+### Features
+
+* **cli:** add --version / -v flag ([2425de1](https://github.com/elydelva/mailmcp/commit/2425de1962ac62eed5925a46f76ab3e77975e84e))
+
 ## [0.5.6](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.5...mailmcp-monorepo-v0.5.6) (2026-03-27)
 
 
