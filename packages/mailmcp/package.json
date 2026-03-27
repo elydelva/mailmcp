@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun build src/index.ts --outdir dist --target node --minify",
+    "build": "bun build src/index.ts --outdir dist --target node",
     "dev": "bun run --watch src/index.ts",
     "start:mcp": "bun run src/index.ts --mcp",
     "typecheck": "tsc --build tsconfig.json"
