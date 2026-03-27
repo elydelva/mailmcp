@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.1...mailmcp-monorepo-v0.5.2) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** add docker hub login to avoid anonymous pull rate limit ([d56bae2](https://github.com/elydelva/mailmcp/commit/d56bae2796a117b3ecf4524b29a3731bbc3d10b3))
+
 ## [0.5.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.0...mailmcp-monorepo-v0.5.1) (2026-03-27)
 
 
