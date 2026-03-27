@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.3](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.2...mailmcp-monorepo-v0.5.3) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** use npm_config_token for bun publish authentication ([2cfeb29](https://github.com/elydelva/mailmcp/commit/2cfeb296361f5584be984ef1c608382338636b5a))
+
 ## [0.5.2](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.1...mailmcp-monorepo-v0.5.2) (2026-03-27)
 
 
