@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.3...mailmcp-monorepo-v0.5.4) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** resolve workspace:* cross-deps to actual version before publish ([8522e88](https://github.com/elydelva/mailmcp/commit/8522e8853018d369971570e639ede279977c620d))
+
 ## [0.5.3](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.2...mailmcp-monorepo-v0.5.3) (2026-03-27)
 
 
