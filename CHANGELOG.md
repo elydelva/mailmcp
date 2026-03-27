@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.6.0...mailmcp-monorepo-v0.6.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* **parser:** remove invisible chars, excess newlines, and add MCP inspector script ([f9d1294](https://github.com/elydelva/mailmcp/commit/f9d129484efb48faf0c792f9c1bfb0fe2f9c1f8c))
+
 ## [0.6.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.6...mailmcp-monorepo-v0.6.0) (2026-03-27)
 
 
