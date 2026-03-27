@@ -59,7 +59,7 @@ jobs:
           bun run --cwd packages/mailmcp build
       - name: Publish to npm
         env:
-          BUN_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           for pkg in crypto providers storage imap smtp parser tools mailmcp; do
             (cd packages/$pkg && bun publish --access public)
