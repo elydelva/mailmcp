@@ -1,6 +1,6 @@
 {
   "name": "@mailmcp/server",
-  "version": "0.1.0",
+  "version": "0.4.2",
   "type": "module",
   "module": "src/index.ts",
   "scripts": {

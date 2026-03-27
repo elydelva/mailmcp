@@ -45,6 +45,8 @@ jobs:
           restore-keys: bun-
       - name: Install dependencies
         run: bun install --frozen-lockfile
+      - name: Sync versions from root package.json
+        run: bun scripts/sync-versions.ts
       - name: Build all packages
         run: |
           bun run --cwd packages/crypto build
