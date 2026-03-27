@@ -1,6 +1,6 @@
 {
   "name": "@mailmcp/smtp",
-  "version": "0.4.2",
+  "version": "0.5.2",
   "type": "module",
   "exports": {
     ".": {
@@ -19,7 +19,7 @@
     "typecheck": "tsc --build tsconfig.json"
   },
   "dependencies": {
-    "@mailmcp/storage": "workspace:*",
+    "@mailmcp/storage": "0.5.2",
     "nodemailer": "^8.0.4"
   },
   "devDependencies": {

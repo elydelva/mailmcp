@@ -1,6 +1,7 @@
 /**
- * Syncs the root package.json version to all workspace packages.
- * Run before publishing to ensure all packages share the same version.
+ * Syncs the root package.json version to all workspace packages,
+ * and replaces workspace:* references between @mailmcp/* packages
+ * with the actual version so bun publish emits correct cross-deps.
  */
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
@@ -24,6 +25,19 @@ for (const entry of entries) {
   if (pkg.private) continue;
 
   pkg.version = version;
+
+  for (const depField of ["dependencies", "devDependencies", "peerDependencies"] as const) {
+    if (!pkg[depField]) continue;
+    for (const [name, spec] of Object.entries(pkg[depField])) {
+      if (
+        name.startsWith("@mailmcp/") &&
+        (spec === "workspace:*" || String(spec).startsWith("workspace:"))
+      ) {
+        pkg[depField][name] = version;
+      }
+    }
+  }
+
   await Bun.write(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
   console.log(`${pkg.name} → ${version}`);
 }
