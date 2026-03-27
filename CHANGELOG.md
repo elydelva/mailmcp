@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.4.2...mailmcp-monorepo-v0.5.0) (2026-03-27)
+
+
+### Features
+
+* **ci:** sync all workspace package versions from root before npm publish ([5dba77f](https://github.com/elydelva/mailmcp/commit/5dba77f1fe416e09036e5a13b0cd61d34d1bf790))
+
+
+### Bug Fixes
+
+* **ci:** use bun publish to resolve workspace dependencies before publish ([393b968](https://github.com/elydelva/mailmcp/commit/393b9688a4228c9b5ef52605d85a33ccd907ecc3))
+
 ## [0.4.2](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.4.1...mailmcp-monorepo-v0.4.2) (2026-03-27)
 
 
