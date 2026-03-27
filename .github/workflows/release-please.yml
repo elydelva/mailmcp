@@ -57,11 +57,11 @@ jobs:
           bun run --cwd packages/mailmcp build
       - name: Publish to npm
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
           for pkg in crypto providers storage imap smtp parser tools mailmcp; do
-            npm publish ./packages/$pkg --access public
+            cd packages/$pkg && bun publish --access public && cd ../..
           done
 
   # ── Trigger Docker publish on release ────────────────────────────────────
