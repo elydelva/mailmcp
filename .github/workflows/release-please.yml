@@ -61,7 +61,7 @@ jobs:
         run: |
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
           for pkg in crypto providers storage imap smtp parser tools mailmcp; do
-            npm publish packages/$pkg --access public
+            npm publish ./packages/$pkg --access public
           done
 
   # ── Trigger Docker publish on release ────────────────────────────────────
