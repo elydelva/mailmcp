@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.0...mailmcp-monorepo-v0.5.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** use bun_auth_token for auth and subshell for cd isolation ([f70278b](https://github.com/elydelva/mailmcp/commit/f70278ba877929c69a1ea4e2ed94f93e4c20134b))
+
 ## [0.5.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.4.2...mailmcp-monorepo-v0.5.0) (2026-03-27)
 
 
