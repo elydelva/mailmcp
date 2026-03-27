@@ -1,4 +1,4 @@
-import type { StorageAdapter } from "@mailmcp/core";
+import type { StorageAdapter } from "@mailmcp/storage";
 
 declare module "fastify" {
   interface FastifyInstance {

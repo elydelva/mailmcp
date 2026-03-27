@@ -1,5 +1,5 @@
-import type { StorageAdapter } from "@mailmcp/core";
 import type { ImapPool } from "@mailmcp/imap";
+import type { StorageAdapter } from "@mailmcp/storage";
 
 export interface ToolContext {
   userId: string;

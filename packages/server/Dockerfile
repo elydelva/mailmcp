@@ -3,8 +3,11 @@ WORKDIR /app
 
 # Install dependencies (workspace-aware: copy all package manifests first)
 COPY package.json bun.lock bunfig.toml ./
-COPY packages/core/package.json ./packages/core/
+COPY packages/crypto/package.json ./packages/crypto/
+COPY packages/storage/package.json ./packages/storage/
+COPY packages/providers/package.json ./packages/providers/
 COPY packages/imap/package.json ./packages/imap/
+COPY packages/parser/package.json ./packages/parser/
 COPY packages/smtp/package.json ./packages/smtp/
 COPY packages/tools/package.json ./packages/tools/
 COPY packages/server/package.json ./packages/server/
@@ -12,8 +15,11 @@ COPY packages/mailmcp/package.json ./packages/mailmcp/
 RUN bun install --frozen-lockfile
 
 # Copy sources and build
-COPY packages/core ./packages/core
+COPY packages/crypto ./packages/crypto
+COPY packages/storage ./packages/storage
+COPY packages/providers ./packages/providers
 COPY packages/imap ./packages/imap
+COPY packages/parser ./packages/parser
 COPY packages/smtp ./packages/smtp
 COPY packages/tools ./packages/tools
 COPY packages/server ./packages/server

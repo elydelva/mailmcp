@@ -1,7 +1,7 @@
+import { encrypt } from "@mailmcp/crypto";
 import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { encrypt } from "../password.js";
 import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
 import { emailAccounts, users } from "./schema.js";
 

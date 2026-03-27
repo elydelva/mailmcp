@@ -12,7 +12,7 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.2",
-    "@mailmcp/core": "workspace:*",
+    "@mailmcp/storage": "workspace:*",
     "@mailmcp/tools": "workspace:*",
     "@modelcontextprotocol/sdk": "catalog:",
     "@sinclair/typebox": "^0.34.48",

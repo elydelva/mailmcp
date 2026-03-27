@@ -1,5 +1,5 @@
 {
-  "name": "@mailmcp/smtp",
+  "name": "@mailmcp/parser",
   "version": "0.1.0",
   "type": "module",
   "exports": {
@@ -12,10 +12,13 @@
     "typecheck": "tsc --build tsconfig.json"
   },
   "dependencies": {
-    "@mailmcp/storage": "workspace:*",
-    "nodemailer": "^8.0.4"
+    "@mozilla/readability": "^0.5.0",
+    "linkedom": "^0.18.10",
+    "mailparser": "^3.7.2",
+    "turndown": "^7.2.0"
   },
   "devDependencies": {
-    "@types/nodemailer": "^7.0.11"
+    "@types/mailparser": "^3.4.6",
+    "@types/turndown": "^5.0.5"
   }
 }

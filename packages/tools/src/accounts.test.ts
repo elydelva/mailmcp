@@ -1,14 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import type {
-  CreateAccountInput,
-  DetectionResult,
-  EmailAccount,
-  StorageAdapter,
-  User,
-  ValidationResult,
-} from "@mailmcp/core";
+import type { DetectionResult } from "@mailmcp/providers";
+import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "@mailmcp/storage";
 import { deleteAccount, listAccounts, setDefaultAccount, setupAccount } from "./accounts.js";
 import type { ToolContext } from "./context.js";
+import type { ValidationResult } from "./validator.js";
 
 // ── In-memory StorageAdapter ─────────────────────────────────────────────────
 

@@ -1,4 +1,4 @@
-import { createStorage } from "@mailmcp/core";
+import { createStorage } from "@mailmcp/storage";
 import Fastify from "fastify";
 import { accountsRoutes } from "./api/accounts.js";
 import { dcrRoutes, introspectMiddleware, loadOAuthConfig, wellKnownRoutes } from "./auth/index.js";

@@ -3,16 +3,17 @@
  *
  * Selects the backend at startup via the STORAGE_BACKEND env variable:
  *   - "file"     (default) — JSON file via lowdb, good for solo/dev use
- *   - "postgres"           — PostgreSQL via Bun.sql (ADR-002)
+ *   - "postgres"           — PostgreSQL via Drizzle ORM (ADR-002)
  */
 
 import { FileStorageAdapter } from "./file.js";
 import type { StorageAdapter } from "./interface.js";
 import { PostgresStorageAdapter } from "./postgres.js";
 
-export { decrypt, encrypt } from "../password.js";
+// Re-export crypto helpers so consumers only need to import from @mailmcp/storage
+export { decrypt, decrypt as decryptToString, encrypt, initEncryptionKey } from "@mailmcp/crypto";
+
 export type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "./interface.js";
-export { initEncryptionKey } from "./key.js";
 export { runMigrations } from "./migrate.js";
 export { PostgresStorageAdapter } from "./postgres.js";
 

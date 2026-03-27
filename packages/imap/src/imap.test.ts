@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { EmailAccount } from "@mailmcp/core";
+import type { EmailAccount } from "@mailmcp/storage";
 import { createImapClient } from "./client.js";
 import {
   deleteEmail,
@@ -210,7 +210,7 @@ describe("operations — with mock client", () => {
     expect(result[0]).toMatchObject({ uid: 42, subject: "Hello", read: true });
   });
 
-  test("listEmails includes bodyText when returnBody is true", async () => {
+  test("listEmails includes source when returnBody is true", async () => {
     const mockWithBody = makeMockClient({
       fetch: async function* () {
         yield {
@@ -222,7 +222,7 @@ describe("operations — with mock client", () => {
             from: [{ name: "Alice", address: "alice@example.com" }],
             date: new Date("2024-01-01T00:00:00Z"),
           },
-          bodyParts: new Map([["1", Buffer.from("some text")]]),
+          source: Buffer.from("some text"),
         };
       },
     });
@@ -232,7 +232,7 @@ describe("operations — with mock client", () => {
       limit: 10,
       returnBody: true,
     });
-    expect(result[0]?.bodyText).toBe("some text");
+    expect(result[0]?.source).toBe("some text");
   });
 
   test("getEmail returns EmailMessage with body", async () => {

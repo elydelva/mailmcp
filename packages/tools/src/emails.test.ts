@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, test } from "bun:test";
-import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "@mailmcp/core";
-import { encrypt } from "@mailmcp/core";
 import type { EmailMessage, EmailSummary, ImapPool, MailboxInfo } from "@mailmcp/imap";
+import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "@mailmcp/storage";
+import { encrypt } from "@mailmcp/storage";
 import type { ToolContext } from "./context.js";
 import {
   batchDelete,
