@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.2](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.4.1...mailmcp-monorepo-v0.4.2) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** prefix npm publish path with ./ to avoid git url interpretation ([cd06d57](https://github.com/elydelva/mailmcp/commit/cd06d5727543f0677b9e41267531d9d7072b54dd))
+
 ## [0.4.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.4.0...mailmcp-monorepo-v0.4.1) (2026-03-27)
 
 
