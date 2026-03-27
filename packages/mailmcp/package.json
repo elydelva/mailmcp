@@ -1,6 +1,6 @@
 {
   "name": "@mailmcp/cli",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "bin": {
     "mailmcp": "./dist/index.js"
@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@clack/prompts": "^0.9.0",
-    "@mailmcp/storage": "0.5.2",
-    "@mailmcp/tools": "0.5.2",
+    "@mailmcp/storage": "0.5.3",
+    "@mailmcp/tools": "0.5.3",
     "@modelcontextprotocol/sdk": "catalog:",
     "pino": "^9.6.0",
     "zod": "catalog:"

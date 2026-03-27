@@ -1,6 +1,6 @@
 {
   "name": "@mailmcp/server",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "module": "src/index.ts",
   "scripts": {
@@ -12,8 +12,8 @@
   "dependencies": {
     "@fastify/cors": "^11.2.0",
     "@fastify/helmet": "^13.0.2",
-    "@mailmcp/storage": "0.5.2",
-    "@mailmcp/tools": "0.5.2",
+    "@mailmcp/storage": "0.5.3",
+    "@mailmcp/tools": "0.5.3",
     "@modelcontextprotocol/sdk": "catalog:",
     "@sinclair/typebox": "^0.34.48",
     "fastify": "^5.8.4",

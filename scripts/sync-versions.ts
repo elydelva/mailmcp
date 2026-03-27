@@ -28,11 +28,8 @@ for (const entry of entries) {
 
   for (const depField of ["dependencies", "devDependencies", "peerDependencies"] as const) {
     if (!pkg[depField]) continue;
-    for (const [name, spec] of Object.entries(pkg[depField])) {
-      if (
-        name.startsWith("@mailmcp/") &&
-        (spec === "workspace:*" || String(spec).startsWith("workspace:"))
-      ) {
+    for (const [name] of Object.entries(pkg[depField])) {
+      if (name.startsWith("@mailmcp/")) {
         pkg[depField][name] = version;
       }
     }

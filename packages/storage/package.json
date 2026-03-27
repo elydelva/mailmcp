@@ -1,6 +1,6 @@
 {
   "name": "@mailmcp/storage",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "exports": {
     ".": {
@@ -21,7 +21,7 @@
     "db:migrate": "bun run src/migrate.ts"
   },
   "dependencies": {
-    "@mailmcp/crypto": "0.5.2",
+    "@mailmcp/crypto": "0.5.3",
     "drizzle-orm": "^0.45.1",
     "lowdb": "^7.0.1",
     "postgres": "^3.4.5"
