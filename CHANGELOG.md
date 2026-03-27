@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.4.0...mailmcp-monorepo-v0.4.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** add rootdir to tsconfig.build.json ([57a5ffb](https://github.com/elydelva/mailmcp/commit/57a5ffbe98c5130e0ef8154433e321ee33f3b1be))
+
 ## [0.4.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.3.0...mailmcp-monorepo-v0.4.0) (2026-03-27)
 
 
