@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.5...mailmcp-monorepo-v0.5.6) (2026-03-27)
+
+
+### Bug Fixes
+
+* **cli:** remove --minify from bun build to preserve unicode characters ([84790a4](https://github.com/elydelva/mailmcp/commit/84790a4482a211a28443d050c43d14a78ed27b0c))
+
 ## [0.5.5](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.4...mailmcp-monorepo-v0.5.5) (2026-03-27)
 
 
