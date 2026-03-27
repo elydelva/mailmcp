@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.3.0...mailmcp-monorepo-v0.4.0) (2026-03-27)
+
+
+### Features
+
+* **ci:** add automated npm publish on release ([aafbe95](https://github.com/elydelva/mailmcp/commit/aafbe95a2be8777a11f098097d37aae9e02a9e53))
+
 ## [0.3.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.2.3...mailmcp-monorepo-v0.3.0) (2026-03-25)
 
 
