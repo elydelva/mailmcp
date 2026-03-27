@@ -4,11 +4,17 @@
   "type": "module",
   "exports": {
     ".": {
+      "bun": "./src/index.ts",
       "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "import": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --build tsconfig.json",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "bun run src/migrate.ts"
@@ -21,5 +27,8 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.10"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

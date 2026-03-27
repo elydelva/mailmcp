@@ -4,15 +4,24 @@
   "type": "module",
   "exports": {
     ".": {
+      "bun": "./src/index.ts",
       "types": "./dist/index.d.ts",
-      "default": "./src/index.ts"
+      "import": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --build tsconfig.json"
   },
   "dependencies": {
     "@mailmcp/storage": "workspace:*",
     "imapflow": "^1.2.17"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
