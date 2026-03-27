@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.5](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.4...mailmcp-monorepo-v0.5.5) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** always sync all @mailmcp/* cross-deps regardless of current spec ([79e7c77](https://github.com/elydelva/mailmcp/commit/79e7c7776394477c24b53920c28e66c50c8639c2))
+
 ## [0.5.4](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.5.3...mailmcp-monorepo-v0.5.4) (2026-03-27)
 
 
