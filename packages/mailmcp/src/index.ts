@@ -7,9 +7,16 @@ const { values, positionals } = parseArgs({
   options: {
     mcp: { type: "boolean", default: false },
     help: { type: "boolean", short: "h", default: false },
+    version: { type: "boolean", short: "v", default: false },
   },
   allowPositionals: true,
 });
+
+if (values.version) {
+  const { default: pkg } = await import("../package.json", { with: { type: "json" } });
+  console.log(pkg.version);
+  process.exit(0);
+}
 
 if (values.mcp) {
   const { startStdioServer } = await import("./mcp/stdio.js");
@@ -72,6 +79,7 @@ if (values.mcp) {
       console.log(`mailmcp — email MCP server
 
 Commands:
+  mailmcp --version                Print version
   mailmcp --mcp                    Start stdio MCP server
   mailmcp workspace list           List workspaces
   mailmcp workspace use <name>     Switch active workspace
