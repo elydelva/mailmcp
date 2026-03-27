@@ -60,13 +60,26 @@ const td = buildTurndown();
  * Also normalises runs of blank lines and trims trailing whitespace.
  */
 function stripInvisible(text: string): string {
-  return text
-    .replace(/\u00AD|\u034F|\u200B|\u200C|\u200D|\u2007|\u2060|\uFEFF/g, "")
-    .replace(/[ \t]{2,}/g, " ")
-    .replace(/^\s+$/gm, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  return (
+    text
+      // Decode HTML-encoded invisible characters before stripping
+      .replace(/&zwnj;|&#8203;|&#65279;/gi, "")
+      .replace(/&#(\d+);/g, (_, code) => {
+        const cp = parseInt(code, 10);
+        return [0xad, 0x34f, 0x200b, 0x200c, 0x200d, 0x2007, 0x2060, 0xfeff].includes(cp)
+          ? ""
+          : String.fromCodePoint(cp);
+      })
+      // Strip Unicode invisible characters
+      .replace(/\u00AD|\u034F|\u200B|\u200C|\u200D|\u2007|\u2060|\uFEFF/g, "")
+      .replace(/[ \t]{2,}/g, " ")
+      .replace(/^\s+$/gm, "")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim()
+  );
 }
+
+export { stripInvisible };
 
 export function toMarkdown(html: string): string {
   return stripInvisible(td.turndown(html));

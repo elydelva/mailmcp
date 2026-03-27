@@ -11,6 +11,7 @@
   "scripts": {
     "build": "bun build src/index.ts --outdir dist --target node",
     "dev": "bun run --watch src/index.ts",
+    "dev:inspect": "npx @modelcontextprotocol/inspector bun run src/index.ts --mcp",
     "start:mcp": "bun run src/index.ts --mcp",
     "typecheck": "tsc --build tsconfig.json"
   },

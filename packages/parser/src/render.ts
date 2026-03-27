@@ -7,7 +7,7 @@
  */
 
 import { extractContent } from "./extract.js";
-import { toMarkdown } from "./markdown.js";
+import { stripInvisible, toMarkdown } from "./markdown.js";
 import { type Attachment, parseMime } from "./mime.js";
 
 export interface RenderedEmail {
@@ -47,7 +47,7 @@ export async function renderEmail(rawMime: string): Promise<RenderedEmail> {
     from: parsed.from,
     date: parsed.date,
     markdown,
-    plainText: parsed.text ?? "",
+    plainText: stripInvisible(parsed.text ?? ""),
     hasHtml: parsed.html !== null,
     attachments: parsed.attachments,
   };
