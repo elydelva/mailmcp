@@ -2,73 +2,21 @@
 
 > A self-hosted MCP server that gives Claude full access to your email — without handing credentials to anyone.
 
-Works with Gmail, iCloud, Outlook, Yahoo, Fastmail, Proton Mail Bridge, and any standard IMAP/SMTP provider.  
-Compatible with **Claude.ai** (web & mobile), **Claude Desktop**, and **Claude Code**.
+Works with Gmail, iCloud, Outlook, Yahoo, Fastmail, Proton Mail Bridge, and any standard IMAP/SMTP provider.
 
 ---
 
-## Install — server mode (multi-user, VPS)
+## Quick start — local mode
 
-You need: a server with Docker + Docker Compose, three DNS records pointing to it, and a Let's Encrypt-compatible email.
+No server, no Docker, no OAuth. Runs directly on your machine in minutes.
 
-**1. Clone and configure**
-
-```bash
-git clone https://github.com/elydelva/mailmcp
-cd mailmcp
-cp .env.example .env
-```
-
-Edit `.env`:
-
-```env
-POSTGRES_PASSWORD=<strong password>
-MCP_DOMAIN=mail.example.com        # your server's MCP endpoint
-HYDRA_DOMAIN=auth.example.com      # OAuth server
-AUTH_UI_DOMAIN=login.example.com   # login/consent UI
-ACME_EMAIL=you@example.com         # Let's Encrypt notifications
-HYDRA_SECRET=<openssl rand -hex 32>
-```
-
-**2. Start the stack**
+### 1. Install
 
 ```bash
-docker compose up -d
+npm install -g mailmcp
 ```
 
-This starts mailmcp + Ory Hydra (OAuth) + login UI + Postgres + Traefik (TLS). Certificates are provisioned automatically.
-
-**3. Add to Claude**
-
-In Claude → Settings → Integrations → Add MCP server:
-
-```
-https://mail.example.com
-```
-
-Claude will walk you through OAuth. Once connected, run:
-
-```
-Set up my email account
-```
-
-Claude will call `setup_account` — your address is detected automatically, and your password is entered locally via the CLI wizard (never sent through Claude).
-
----
-
-## Install — local mode (single user, no server)
-
-No Docker, no OAuth. Runs directly on your machine.
-
-**1. Install**
-
-```bash
-bun install -g mailmcp
-# or for one-off use:
-bunx mailmcp setup
-```
-
-**2. Add your email account**
+### 2. Add your email account
 
 ```bash
 mailmcp setup
@@ -76,9 +24,11 @@ mailmcp setup
 
 The wizard asks for your provider, email, and app password. IMAP/SMTP settings are detected automatically.
 
-**3. Configure Claude Desktop**
+> **Gmail / iCloud / Yahoo:** use an [app password](https://support.google.com/accounts/answer/185833), not your main account password.
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+### 3. Connect to Claude
+
+**Claude Desktop** — add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
@@ -88,19 +38,37 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
-Restart Claude Desktop. That's it.
+Restart Claude Desktop. Done.
+
+**Claude.ai (web & mobile)** — go to Settings → Integrations → Add MCP server, then run:
+
+```bash
+mailmcp serve
+```
+
+Copy the displayed URL into Claude and follow the on-screen instructions.
+
+**Claude Code** — add to your project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "mail": { "command": "mailmcp", "args": ["--mcp"] }
+  }
+}
+```
 
 ---
 
 ## Managing accounts
 
 ```bash
-mailmcp accounts               # list configured accounts
-mailmcp accounts remove <email>
-mailmcp status                 # health check
+mailmcp accounts                   # list configured accounts
+mailmcp accounts remove <email>    # remove an account
+mailmcp status                     # health check
 ```
 
-For multiple servers or contexts:
+For multiple contexts (home, work, etc.):
 
 ```bash
 mailmcp workspace list
@@ -138,13 +106,86 @@ mailmcp workspace add work https://mail.work.example.com
 | Proton Mail (Bridge) | ✅ |
 | Any IMAP/SMTP server | ✅ (DNS lookup) |
 
-For Gmail and other providers that require it, use an **app password**, not your main account password.
+---
+
+## Self-hosted server mode
+
+For teams or multi-user setups. Hosts a full OAuth 2.1 server — users authenticate with their own accounts, credentials stay on the server.
+
+### Requirements
+
+- A Linux server with Docker and Docker Compose
+- Three DNS records pointing to your server:
+  - `mail.example.com` — MCP endpoint
+  - `auth.example.com` — OAuth server (Ory Hydra)
+  - `login.example.com` — login/consent UI
+- A valid email address for Let's Encrypt
+
+### 1. Clone and configure
+
+```bash
+git clone https://github.com/elydelva/mailmcp
+cd mailmcp
+cp .env.example .env
+```
+
+Edit `.env`:
+
+```env
+POSTGRES_PASSWORD=<strong password>
+MCP_DOMAIN=mail.example.com
+HYDRA_DOMAIN=auth.example.com
+AUTH_UI_DOMAIN=login.example.com
+ACME_EMAIL=you@example.com
+HYDRA_SECRET=<openssl rand -hex 32>
+```
+
+### 2. Start the stack
+
+```bash
+docker compose -f docker/docker-compose.yml up -d
+```
+
+Starts mailmcp + Ory Hydra (OAuth 2.1) + login UI + PostgreSQL + Traefik (TLS). Certificates are provisioned automatically via Let's Encrypt.
+
+### 3. Add to Claude
+
+In Claude → Settings → Integrations → Add MCP server:
+
+```
+https://mail.example.com
+```
+
+Claude walks you through OAuth. Once connected, run:
+
+```
+Set up my email account
+```
+
+Claude calls `setup_account` — your address is detected automatically, and your app password is entered locally via the CLI wizard (never sent through Claude).
+
+### Stack overview
+
+| Service | Role |
+|---|---|
+| `mailmcp` | MCP server (this repo) |
+| `hydra` | OAuth 2.1 authorization server |
+| `hydra-ui` | Login & consent UI |
+| `postgres` | Persistent storage |
+| `traefik` | Reverse proxy + TLS termination |
+
+### Upgrading
+
+```bash
+docker compose -f docker/docker-compose.yml pull
+docker compose -f docker/docker-compose.yml up -d
+```
 
 ---
 
 ## More
 
-- [Architecture & design decisions](ARCHITECTURE.md)
+- [Architecture & design decisions](docs/ARCHITECTURE.md)
 - [Contributing / development setup](CONTRIBUTING.md)
 
 ## License
