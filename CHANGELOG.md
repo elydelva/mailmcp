@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.6.1...mailmcp-monorepo-v0.7.0) (2026-03-28)
+
+
+### Features
+
+* **batch:** add batch email operations with filter support and batch_archive ([c656cac](https://github.com/elydelva/mailmcp/commit/c656cacb0b1fe23768921b3815985e22fcc60eba))
+
 ## [0.6.1](https://github.com/elydelva/mailmcp/compare/mailmcp-monorepo-v0.6.0...mailmcp-monorepo-v0.6.1) (2026-03-27)
 
 
