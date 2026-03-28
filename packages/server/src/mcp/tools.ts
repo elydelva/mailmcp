@@ -1,5 +1,6 @@
 import type { ToolContext } from "@mailmcp/tools";
 import {
+  batchArchive,
   batchDelete,
   batchMark,
   batchMove,
@@ -330,13 +331,25 @@ export function registerEmailTools(server: McpServer, ctx: ToolContext): void {
     },
   );
 
+  const batchFilterSchema = z
+    .object({
+      from: z.string().optional(),
+      subject: z.string().optional(),
+      before: z.coerce.date().optional(),
+      after: z.coerce.date().optional(),
+      read: z.boolean().optional(),
+    })
+    .optional();
+
   server.registerTool(
     "batch_move",
     {
-      description: "Move multiple emails to another mailbox",
+      description:
+        "Move multiple emails to another mailbox. Provide either explicit uids or a filter to resolve them server-side (max 500).",
       inputSchema: z.object({
         accountId: z.string().optional(),
-        uids: z.array(z.number().int().positive()),
+        uids: z.array(z.number().int().positive()).optional(),
+        filter: batchFilterSchema,
         mailbox: z.string(),
         destination: z.string(),
       }),
@@ -354,10 +367,12 @@ export function registerEmailTools(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
     "batch_delete",
     {
-      description: "Permanently delete multiple emails",
+      description:
+        "Permanently delete multiple emails. Provide either explicit uids or a filter to resolve them server-side (max 500).",
       inputSchema: z.object({
         accountId: z.string().optional(),
-        uids: z.array(z.number().int().positive()),
+        uids: z.array(z.number().int().positive()).optional(),
+        filter: batchFilterSchema,
         mailbox: z.string(),
       }),
       annotations: { destructiveHint: true },
@@ -374,10 +389,12 @@ export function registerEmailTools(server: McpServer, ctx: ToolContext): void {
   server.registerTool(
     "batch_mark",
     {
-      description: "Mark multiple emails as read/unread or flagged/unflagged",
+      description:
+        "Mark multiple emails as read/unread or flagged/unflagged. Provide either explicit uids or a filter (max 500).",
       inputSchema: z.object({
         accountId: z.string().optional(),
-        uids: z.array(z.number().int().positive()),
+        uids: z.array(z.number().int().positive()).optional(),
+        filter: batchFilterSchema,
         mailbox: z.string(),
         read: z.boolean().optional(),
         flagged: z.boolean().optional(),
@@ -387,6 +404,28 @@ export function registerEmailTools(server: McpServer, ctx: ToolContext): void {
     async (params) => {
       try {
         return ok(await batchMark(ctx, params));
+      } catch (e) {
+        return err(e);
+      }
+    },
+  );
+
+  server.registerTool(
+    "batch_archive",
+    {
+      description:
+        "Archive multiple emails (move to the Archive folder). Provide either explicit uids or a filter (max 500).",
+      inputSchema: z.object({
+        accountId: z.string().optional(),
+        uids: z.array(z.number().int().positive()).optional(),
+        filter: batchFilterSchema,
+        mailbox: z.string(),
+      }),
+      annotations: { destructiveHint: true },
+    },
+    async (params) => {
+      try {
+        return ok(await batchArchive(ctx, params));
       } catch (e) {
         return err(e);
       }
