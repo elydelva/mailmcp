@@ -1,5 +1,9 @@
-import type { ImapPool } from "@mailmcp/imap";
+import type { BatchFilter, ImapPool } from "@mailmcp/imap";
 import {
+  findArchiveFolder,
+  batchDeleteEmails as imapBatchDelete,
+  batchMarkEmails as imapBatchMark,
+  batchMoveEmails as imapBatchMove,
   deleteEmail as imapDeleteEmail,
   getEmail as imapGetEmail,
   listEmails as imapListEmails,
@@ -8,6 +12,7 @@ import {
   moveEmail as imapMoveEmail,
   imapPool,
   searchEmails as imapSearchEmails,
+  searchByFilter,
 } from "@mailmcp/imap";
 import { renderEmail } from "@mailmcp/parser";
 import type { AttachmentInput } from "@mailmcp/smtp";
@@ -125,23 +130,35 @@ export interface MarkEmailParams {
 
 export interface BatchMoveParams {
   accountId?: string;
-  uids: number[];
+  /** Explicit list of UIDs. Required if `filter` is not provided. */
+  uids?: number[];
+  /** Resolve UIDs via IMAP SEARCH. Required if `uids` is not provided. */
+  filter?: BatchFilter;
   mailbox: string;
   destination: string;
 }
 
 export interface BatchDeleteParams {
   accountId?: string;
-  uids: number[];
+  uids?: number[];
+  filter?: BatchFilter;
   mailbox: string;
 }
 
 export interface BatchMarkParams {
   accountId?: string;
-  uids: number[];
+  uids?: number[];
+  filter?: BatchFilter;
   mailbox: string;
   read?: boolean;
   flagged?: boolean;
+}
+
+export interface BatchArchiveParams {
+  accountId?: string;
+  uids?: number[];
+  filter?: BatchFilter;
+  mailbox: string;
 }
 
 // ── Read tools ────────────────────────────────────────────────────────────────
@@ -299,14 +316,28 @@ export async function markEmail(ctx: ToolContext, params: MarkEmailParams, _deps
 
 // ── Batch tools ───────────────────────────────────────────────────────────────
 
+const BATCH_LIMIT = 500;
+
+async function resolveBatchUids(
+  client: Parameters<typeof searchByFilter>[0],
+  mailbox: string,
+  uids: number[] | undefined,
+  filter: BatchFilter | undefined,
+): Promise<number[]> {
+  if (uids !== undefined) return uids;
+  if (filter !== undefined) return searchByFilter(client, mailbox, filter);
+  throw new Error("Either uids or filter must be provided");
+}
+
 export async function batchMove(ctx: ToolContext, params: BatchMoveParams, _deps: EmailDeps = {}) {
-  const { accountId, uids, mailbox, destination } = params;
+  const { accountId, uids: rawUids, filter, mailbox, destination } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
   const pool = _deps.pool ?? ctx.imapPool ?? imapPool;
   const client = await pool.getClient(ctx.userId, account, password);
-  for (const uid of uids) {
-    await imapMoveEmail(client, uid, mailbox, destination);
-  }
+  const uids = await resolveBatchUids(client, mailbox, rawUids, filter);
+  if (uids.length > BATCH_LIMIT)
+    throw new Error(`Batch limit exceeded: ${uids.length} UIDs (max ${BATCH_LIMIT})`);
+  await imapBatchMove(client, uids, mailbox, destination);
   return { status: "ok" as const, moved: uids.length };
 }
 
@@ -315,23 +346,43 @@ export async function batchDelete(
   params: BatchDeleteParams,
   _deps: EmailDeps = {},
 ) {
-  const { accountId, uids, mailbox } = params;
+  const { accountId, uids: rawUids, filter, mailbox } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
   const pool = _deps.pool ?? ctx.imapPool ?? imapPool;
   const client = await pool.getClient(ctx.userId, account, password);
-  for (const uid of uids) {
-    await imapDeleteEmail(client, uid, mailbox);
-  }
+  const uids = await resolveBatchUids(client, mailbox, rawUids, filter);
+  if (uids.length > BATCH_LIMIT)
+    throw new Error(`Batch limit exceeded: ${uids.length} UIDs (max ${BATCH_LIMIT})`);
+  await imapBatchDelete(client, uids, mailbox);
   return { status: "ok" as const, deleted: uids.length };
 }
 
 export async function batchMark(ctx: ToolContext, params: BatchMarkParams, _deps: EmailDeps = {}) {
-  const { accountId, uids, mailbox, read, flagged } = params;
+  const { accountId, uids: rawUids, filter, mailbox, read, flagged } = params;
   const { account, password } = await resolveAccount(ctx, accountId);
   const pool = _deps.pool ?? ctx.imapPool ?? imapPool;
   const client = await pool.getClient(ctx.userId, account, password);
-  for (const uid of uids) {
-    await imapMarkEmail(client, uid, mailbox, { read, flagged });
-  }
+  const uids = await resolveBatchUids(client, mailbox, rawUids, filter);
+  if (uids.length > BATCH_LIMIT)
+    throw new Error(`Batch limit exceeded: ${uids.length} UIDs (max ${BATCH_LIMIT})`);
+  await imapBatchMark(client, uids, mailbox, { read, flagged });
   return { status: "ok" as const, marked: uids.length };
+}
+
+export async function batchArchive(
+  ctx: ToolContext,
+  params: BatchArchiveParams,
+  _deps: EmailDeps = {},
+) {
+  const { accountId, uids: rawUids, filter, mailbox } = params;
+  const { account, password } = await resolveAccount(ctx, accountId);
+  const pool = _deps.pool ?? ctx.imapPool ?? imapPool;
+  const client = await pool.getClient(ctx.userId, account, password);
+  const archive = await findArchiveFolder(client);
+  if (!archive) throw new Error("No Archive folder found on this account");
+  const uids = await resolveBatchUids(client, mailbox, rawUids, filter);
+  if (uids.length > BATCH_LIMIT)
+    throw new Error(`Batch limit exceeded: ${uids.length} UIDs (max ${BATCH_LIMIT})`);
+  await imapBatchMove(client, uids, mailbox, archive);
+  return { status: "ok" as const, archived: uids.length, destination: archive };
 }
