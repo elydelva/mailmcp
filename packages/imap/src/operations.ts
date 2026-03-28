@@ -250,6 +250,107 @@ export async function deleteEmail(client: ImapFlow, uid: number, mailbox: string
   await client.messageDelete(`${uid}`, { uid: true });
 }
 
+// ---------------------------------------------------------------------------
+// Batch helpers
+// ---------------------------------------------------------------------------
+
+/** Structured filter for resolving a set of UIDs via IMAP SEARCH. */
+export interface BatchFilter {
+  from?: string;
+  subject?: string;
+  /** Upper bound — messages older than this date */
+  before?: Date;
+  /** Lower bound — messages newer than this date */
+  after?: Date;
+  read?: boolean;
+}
+
+/** Resolve a BatchFilter to a list of UIDs using IMAP SEARCH. */
+export async function searchByFilter(
+  client: ImapFlow,
+  mailbox: string,
+  filter: BatchFilter,
+): Promise<number[]> {
+  await client.mailboxOpen(mailbox);
+  const criteria: Record<string, unknown> = {};
+  if (filter.from) criteria.from = filter.from;
+  if (filter.subject) criteria.subject = filter.subject;
+  if (filter.before) criteria.before = filter.before;
+  if (filter.after) criteria.since = filter.after;
+  if (filter.read !== undefined) criteria.seen = filter.read;
+  const uids = await client.search(criteria, { uid: true });
+  return Array.isArray(uids) ? uids : [];
+}
+
+/** Build a UID sequence-set string from an array of UIDs (e.g. "1,2,3"). */
+function uidSet(uids: number[]): string {
+  return uids.join(",");
+}
+
+/**
+ * Move multiple messages to another mailbox in a single IMAP command.
+ */
+export async function batchMoveEmails(
+  client: ImapFlow,
+  uids: number[],
+  from: string,
+  to: string,
+): Promise<void> {
+  if (uids.length === 0) return;
+  await client.mailboxOpen(from);
+  await client.messageMove(uidSet(uids), to, { uid: true });
+}
+
+/**
+ * Permanently delete multiple messages in a single IMAP command.
+ */
+export async function batchDeleteEmails(
+  client: ImapFlow,
+  uids: number[],
+  mailbox: string,
+): Promise<void> {
+  if (uids.length === 0) return;
+  await client.mailboxOpen(mailbox);
+  await client.messageDelete(uidSet(uids), { uid: true });
+}
+
+/**
+ * Set read / flagged status on multiple messages in a single IMAP command.
+ */
+export async function batchMarkEmails(
+  client: ImapFlow,
+  uids: number[],
+  mailbox: string,
+  flags: { read?: boolean; flagged?: boolean },
+): Promise<void> {
+  if (uids.length === 0) return;
+  await client.mailboxOpen(mailbox);
+  const set = uidSet(uids);
+  const opts = { uid: true };
+
+  if (flags.read !== undefined) {
+    if (flags.read) await client.messageFlagsAdd(set, ["\\Seen"], opts);
+    else await client.messageFlagsRemove(set, ["\\Seen"], opts);
+  }
+
+  if (flags.flagged !== undefined) {
+    if (flags.flagged) await client.messageFlagsAdd(set, ["\\Flagged"], opts);
+    else await client.messageFlagsRemove(set, ["\\Flagged"], opts);
+  }
+}
+
+/**
+ * Find the Archive folder name by looking for the \Archive special-use flag,
+ * then falling back to common name patterns.
+ */
+export async function findArchiveFolder(client: ImapFlow): Promise<string | null> {
+  const folders = await client.list();
+  const byFlag = folders.find((f) => f.flags?.has("\\Archive"));
+  if (byFlag) return byFlag.path;
+  const byName = folders.find((f) => /^(archive|archived|\[gmail\]\/all mail)$/i.test(f.path));
+  return byName?.path ?? null;
+}
+
 /**
  * Set read / flagged status on a message by UID.
  */
