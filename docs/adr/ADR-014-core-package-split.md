@@ -2,7 +2,7 @@
 issue: ADR-014
 title: Split @mailmcp/core by responsibility
 branch: refactor/core-package-split
-status: in-progress
+status: completed
 pr: 42
 pr_url: https://github.com/elydelva/mailmcp/pull/42
 github_issue: 41
