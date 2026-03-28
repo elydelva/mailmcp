@@ -47,5 +47,8 @@
     "lint-staged": "^16.4.0",
     "turbo": "^2.8.20",
     "typescript": "^6.0.2"
+  },
+  "overrides": {
+    "path-to-regexp": ">=8.4.0"
   }
 }
