@@ -80,16 +80,62 @@ mailmcp workspace add work https://mail.work.example.com
 
 ## What Claude can do with your email
 
-| Ask Claude to… | Tool used |
+### Account management
+
+| Tool | What it does |
 |---|---|
-| "Show my unread emails" | `list_emails` |
-| "Read the thread with Alice" | `get_thread` |
-| "Search for invoices from last month" | `search_emails` |
-| "Reply to Bob's message" | `reply_email` |
-| "Send a draft to the team" | `send_email` |
-| "Move all newsletters to Archives" | `batch_move` |
-| "Delete emails older than 6 months" | `batch_delete` |
-| "Mark everything from GitHub as read" | `batch_mark` |
+| `setup_account` | Add a new email account (provider auto-detected) |
+| `list_accounts` | List all configured accounts |
+| `set_default_account` | Change the default account |
+| `delete_account` | Remove an account |
+
+### Reading & searching
+
+| Tool | What it does |
+|---|---|
+| `list_emails` | List emails with pagination (`page`, `limit`) |
+| `get_email` | Fetch a single email by UID (full body + attachments) |
+| `get_thread` | Fetch an entire conversation thread by UID |
+| `list_folders` | List all mailbox folders |
+| `search_emails` | Search emails by keyword |
+
+### Sending
+
+| Tool | What it does |
+|---|---|
+| `send_email` | Compose and send a new email |
+| `reply_email` | Reply to an existing email (preserves threading headers) |
+| `forward_email` | Forward an email to new recipients |
+
+### Single-email actions
+
+| Tool | What it does |
+|---|---|
+| `move_email` | Move an email to another folder |
+| `delete_email` | Permanently delete an email |
+| `mark_email` | Mark as read / unread / flagged / unflagged |
+
+### Batch actions (up to 500 emails per call)
+
+Accepts either an explicit list of UIDs or a server-side filter (`from`, `subject`, `before`, `after`, `read`).
+
+| Tool | What it does |
+|---|---|
+| `batch_move` | Move multiple emails to a folder |
+| `batch_delete` | Permanently delete multiple emails |
+| `batch_mark` | Mark multiple emails as read / unread / flagged |
+| `batch_archive` | Move multiple emails to the Archive folder (auto-detected) |
+
+**Examples:**
+```
+"Show my unread emails"                       → list_emails
+"Read the thread with Alice"                  → get_thread
+"Search for invoices from last month"         → search_emails
+"Reply to Bob's message"                      → reply_email
+"Archive all newsletters from this week"      → batch_archive (filter: from + after)
+"Delete emails older than 6 months"           → batch_delete (filter: before)
+"Mark everything from GitHub as read"         → batch_mark   (filter: from)
+```
 
 ---
 
