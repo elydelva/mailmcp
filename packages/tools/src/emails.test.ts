@@ -192,25 +192,27 @@ function createMockPool(
     search: async (_q: unknown) => {
       return (overrides.searchEmails ?? []).map((e) => e.uid);
     },
-    messageMove: async (_uid: string, to: string) => {
-      moves.push({ uid: Number(_uid), from: "", to });
+    messageMove: async (uidSet: string, to: string) => {
+      for (const uid of uidSet.split(",")) moves.push({ uid: Number(uid), from: "", to });
     },
-    messageDelete: async (_uid: string) => {
-      deletes.push({ uid: Number(_uid), mailbox: "" });
+    messageDelete: async (uidSet: string) => {
+      for (const uid of uidSet.split(",")) deletes.push({ uid: Number(uid), mailbox: "" });
     },
-    messageFlagsAdd: async (_uid: string, flags: string[]) => {
-      marks.push({
-        uid: Number(_uid),
-        mailbox: "",
-        flags: { read: flags.includes("\\Seen"), flagged: flags.includes("\\Flagged") },
-      });
+    messageFlagsAdd: async (uidSet: string, flags: string[]) => {
+      for (const uid of uidSet.split(","))
+        marks.push({
+          uid: Number(uid),
+          mailbox: "",
+          flags: { read: flags.includes("\\Seen"), flagged: flags.includes("\\Flagged") },
+        });
     },
-    messageFlagsRemove: async (_uid: string, flags: string[]) => {
-      marks.push({
-        uid: Number(_uid),
-        mailbox: "",
-        flags: { read: !flags.includes("\\Seen"), flagged: !flags.includes("\\Flagged") },
-      });
+    messageFlagsRemove: async (uidSet: string, flags: string[]) => {
+      for (const uid of uidSet.split(","))
+        marks.push({
+          uid: Number(uid),
+          mailbox: "",
+          flags: { read: !flags.includes("\\Seen"), flagged: !flags.includes("\\Flagged") },
+        });
     },
   };
 
