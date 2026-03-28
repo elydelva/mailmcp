@@ -3,10 +3,6 @@
     ".": {
       "ignoreDependencies": ["bun-types"]
     },
-    "packages/core": {
-      "project": ["src/**/*.ts"],
-      "ignoreDependencies": ["@sinclair/typebox"]
-    },
     "packages/imap": {
       "project": ["src/**/*.ts"]
     },
