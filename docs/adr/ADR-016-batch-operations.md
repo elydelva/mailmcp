@@ -3,10 +3,10 @@ issue: ADR-016
 title: MCP Tools — Batch Email Operations
 branch: feat/batch-operations
 status: in-progress
-pr: ~
-pr_url: ~
-github_issue: ~
-github_issue_url: ~
+pr: 61
+pr_url: https://github.com/elydelva/mailmcp/pull/61
+github_issue: 60
+github_issue_url: https://github.com/elydelva/mailmcp/issues/60
 depends_on: [ADR-008, ADR-015]
 required_by: []
 ---
