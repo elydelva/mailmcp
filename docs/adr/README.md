@@ -23,6 +23,7 @@ Each ADR maps to a GitHub Issue, a git branch, and describes the goals and progr
 | [ADR-013](ADR-013-typescript-project-references.md) | TypeScript project references — monorepo typecheck scalability | — | completed |
 | [ADR-014](ADR-014-core-package-split.md) | Split @mailmcp/core by responsibility + rename CLI | `core` + `mailmcp` | completed |
 | [ADR-015](ADR-015-email-body-rendering.md) | Email body rendering pipeline — MIME, extraction, Markdown | `parser` | completed |
+| [ADR-016](ADR-016-batch-operations.md) | MCP Tools — Batch Email Operations | `core` + `server` | in-progress |
 
 ---
 
@@ -67,6 +68,7 @@ ADR-001 ──┼──► ADR-010 ──┬──► ADR-002 ──┐
 | ADR-013 | ADR-012 | — |
 | ADR-014 | ADR-010, ADR-013 | — |
 | ADR-015 | ADR-008, ADR-014 | — |
+| ADR-016 | ADR-008, ADR-015 | — |
 
 ---
 
@@ -91,4 +93,6 @@ Les ADRs sur la même ligne peuvent être travaillés en parallèle.
         │ ADR-009  (Docker — nécessite ADR-003, ADR-010)
          │
 Étape 6 │ ADR-015  (Email body rendering — nécessite ADR-008, ADR-014)
+         │
+Étape 7 │ ADR-016  (Batch email operations — nécessite ADR-008, ADR-015)
 ```
