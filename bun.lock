@@ -20,26 +20,26 @@
     },
     "packages/crypto": {
       "name": "@mailmcp/crypto",
-      "version": "0.1.0",
+      "version": "0.5.3",
     },
     "packages/imap": {
       "name": "@mailmcp/imap",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "dependencies": {
-        "@mailmcp/storage": "workspace:*",
+        "@mailmcp/storage": "0.5.3",
         "imapflow": "^1.2.17",
       },
     },
     "packages/mailmcp": {
       "name": "@mailmcp/cli",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "bin": {
-        "mailmcp": "./src/index.ts",
+        "mailmcp": "./dist/index.js",
       },
       "dependencies": {
         "@clack/prompts": "^0.9.0",
-        "@mailmcp/storage": "workspace:*",
-        "@mailmcp/tools": "workspace:*",
+        "@mailmcp/storage": "0.5.3",
+        "@mailmcp/tools": "0.5.3",
         "@modelcontextprotocol/sdk": "catalog:",
         "pino": "^9.6.0",
         "zod": "catalog:",
@@ -50,7 +50,7 @@
     },
     "packages/parser": {
       "name": "@mailmcp/parser",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "dependencies": {
         "@mozilla/readability": "^0.5.0",
         "linkedom": "^0.18.10",
@@ -64,16 +64,16 @@
     },
     "packages/providers": {
       "name": "@mailmcp/providers",
-      "version": "0.1.0",
+      "version": "0.5.3",
     },
     "packages/server": {
       "name": "@mailmcp/server",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "dependencies": {
         "@fastify/cors": "^11.2.0",
         "@fastify/helmet": "^13.0.2",
-        "@mailmcp/storage": "workspace:*",
-        "@mailmcp/tools": "workspace:*",
+        "@mailmcp/storage": "0.5.3",
+        "@mailmcp/tools": "0.5.3",
         "@modelcontextprotocol/sdk": "catalog:",
         "@sinclair/typebox": "^0.34.48",
         "fastify": "^5.8.4",
@@ -83,9 +83,9 @@
     },
     "packages/smtp": {
       "name": "@mailmcp/smtp",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "dependencies": {
-        "@mailmcp/storage": "workspace:*",
+        "@mailmcp/storage": "0.5.3",
         "nodemailer": "^8.0.4",
       },
       "devDependencies": {
@@ -94,9 +94,9 @@
     },
     "packages/storage": {
       "name": "@mailmcp/storage",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "dependencies": {
-        "@mailmcp/crypto": "workspace:*",
+        "@mailmcp/crypto": "0.5.3",
         "drizzle-orm": "^0.45.1",
         "lowdb": "^7.0.1",
         "postgres": "^3.4.5",
@@ -107,12 +107,13 @@
     },
     "packages/tools": {
       "name": "@mailmcp/tools",
-      "version": "0.1.0",
+      "version": "0.5.3",
       "dependencies": {
-        "@mailmcp/imap": "workspace:*",
-        "@mailmcp/providers": "workspace:*",
-        "@mailmcp/smtp": "workspace:*",
-        "@mailmcp/storage": "workspace:*",
+        "@mailmcp/imap": "0.5.3",
+        "@mailmcp/parser": "0.5.3",
+        "@mailmcp/providers": "0.5.3",
+        "@mailmcp/smtp": "0.5.3",
+        "@mailmcp/storage": "0.5.3",
         "imapflow": "^1.2.17",
         "nodemailer": "^8.0.4",
       },
@@ -120,6 +121,9 @@
         "@types/nodemailer": "^7.0.11",
       },
     },
+  },
+  "overrides": {
+    "path-to-regexp": ">=8.4.0",
   },
   "catalog": {
     "@modelcontextprotocol/sdk": "^1.9.0",
@@ -808,7 +812,7 @@
 
     "path-key": ["path-key@3.1.1", "", {}, "sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q=="],
 
-    "path-to-regexp": ["path-to-regexp@8.3.0", "", {}, "sha512-7jdwVIRtsP8MYpdXSwOS0YdD0Du+qOoF/AEPIt88PcCFrZCzx41oxku1jD88hZBwbNUIEfpqvuhjFaMAqMTWnA=="],
+    "path-to-regexp": ["path-to-regexp@8.4.0", "", {}, "sha512-PuseHIvAnz3bjrM2rGJtSgo1zjgxapTLZ7x2pjhzWwlp4SJQgK3f3iZIQwkpEnBaKz6seKBADpM4B4ySkuYypg=="],
 
     "peberminta": ["peberminta@0.9.0", "", {}, "sha512-XIxfHpEuSJbITd1H3EeQwpcZbTLHc+VVr8ANI9t5sit565tsI4/xK3KWTUFE2e6QiangUkh3B0jihzmGnNrRsQ=="],
 

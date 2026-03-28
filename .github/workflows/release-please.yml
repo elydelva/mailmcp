@@ -78,6 +78,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ needs.release-please.outputs.tag_name }}
+      - name: Copy .dockerignore to build context root
+        run: cp docker/.dockerignore .dockerignore
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
       - name: Log in to Docker Hub

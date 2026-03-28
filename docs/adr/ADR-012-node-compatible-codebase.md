@@ -2,7 +2,7 @@
 issue: ADR-012
 title: Node.js-compatible codebase — Bun as runtime only
 branch: refactor/node-compatible-codebase
-status: in-progress
+status: completed
 pr: 32
 pr_url: https://github.com/elydelva/mailmcp/pull/32
 github_issue: 34
