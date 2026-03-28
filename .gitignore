@@ -6,7 +6,6 @@ dist/
 data/
 *.log
 .DS_Store
-bun.lock
 .turbo/
 .claude/
 .cursor/
