@@ -9,3 +9,4 @@ data/
 bun.lock
 .turbo/
 .claude/
+.cursor/
