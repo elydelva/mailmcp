@@ -4,6 +4,7 @@ import type { CreateAccountInput, EmailAccount, StorageAdapter, User } from "@ma
 import { encrypt } from "@mailmcp/storage";
 import type { ToolContext } from "./context.js";
 import {
+  batchArchive,
   batchDelete,
   batchMark,
   batchMove,
@@ -129,6 +130,7 @@ function createMockPool(
     getEmail?: EmailMessage | null;
     listFolders?: MailboxInfo[];
     searchEmails?: EmailSummary[];
+    archiveFolder?: string;
     moveEmail?: () => void;
     deleteEmail?: () => void;
     markEmail?: () => void;
@@ -148,12 +150,21 @@ function createMockPool(
 
   const fakeClient = {
     usable: true,
-    list: async () =>
-      (overrides.listFolders ?? []).map((f) => ({
+    list: async () => {
+      const folders = (overrides.listFolders ?? []).map((f) => ({
         path: f.name,
         delimiter: f.delimiter,
         flags: new Set(f.flags),
-      })),
+      }));
+      if (overrides.archiveFolder) {
+        folders.push({
+          path: overrides.archiveFolder,
+          delimiter: "/",
+          flags: new Set(["\\Archive"]),
+        });
+      }
+      return folders;
+    },
     mailboxOpen: async () => {},
     fetch: async function* (range: unknown, _q: unknown) {
       // When range is an array of UIDs (from search), use searchEmails data;
@@ -435,6 +446,147 @@ describe("batchMark", () => {
     expect(result.status).toBe("ok");
     expect(result.marked).toBe(3);
     expect(mockPool._marks).toHaveLength(3);
+  });
+});
+
+describe("batchMove with filter", () => {
+  test("resolves uids via IMAP SEARCH when filter is provided", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool({ searchEmails: [makeEmail(10), makeEmail(20)] });
+    const result = await batchMove(
+      ctx,
+      { filter: { from: "newsletter@example.com" }, mailbox: "INBOX", destination: "Newsletters" },
+      { pool: mockPool },
+    );
+    expect(result.status).toBe("ok");
+    expect(result.moved).toBe(2);
+    expect(mockPool._moves).toHaveLength(2);
+    expect(mockPool._moves.map((m) => m.uid)).toEqual([10, 20]);
+  });
+});
+
+describe("batchDelete with filter", () => {
+  test("resolves uids via filter and deletes them", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool({ searchEmails: [makeEmail(5), makeEmail(6), makeEmail(7)] });
+    const result = await batchDelete(
+      ctx,
+      { filter: { subject: "promo" }, mailbox: "INBOX" },
+      { pool: mockPool },
+    );
+    expect(result.status).toBe("ok");
+    expect(result.deleted).toBe(3);
+    expect(mockPool._deletes).toHaveLength(3);
+  });
+});
+
+describe("batchMark with filter", () => {
+  test("marks emails matching a filter as read", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool({ searchEmails: [makeEmail(1), makeEmail(2)] });
+    const result = await batchMark(
+      ctx,
+      { filter: { read: false }, mailbox: "INBOX", read: true },
+      { pool: mockPool },
+    );
+    expect(result.status).toBe("ok");
+    expect(result.marked).toBe(2);
+  });
+});
+
+describe("batch uid limit", () => {
+  test("throws when more than 500 uids are provided", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const uids = Array.from({ length: 501 }, (_, i) => i + 1);
+    const mockPool = createMockPool();
+    await expect(batchDelete(ctx, { uids, mailbox: "INBOX" }, { pool: mockPool })).rejects.toThrow(
+      "Batch limit exceeded",
+    );
+  });
+
+  test("accepts exactly 500 uids", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const uids = Array.from({ length: 500 }, (_, i) => i + 1);
+    const mockPool = createMockPool();
+    const result = await batchDelete(ctx, { uids, mailbox: "INBOX" }, { pool: mockPool });
+    expect(result.status).toBe("ok");
+    expect(result.deleted).toBe(500);
+  });
+});
+
+describe("batch missing input", () => {
+  test("throws when neither uids nor filter are provided", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool();
+    await expect(batchDelete(ctx, { mailbox: "INBOX" }, { pool: mockPool })).rejects.toThrow(
+      "Either uids or filter must be provided",
+    );
+  });
+});
+
+describe("batchArchive", () => {
+  test("moves emails to the detected archive folder", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool({ archiveFolder: "Archive" });
+    const result = await batchArchive(
+      ctx,
+      { uids: [1, 2, 3], mailbox: "INBOX" },
+      { pool: mockPool },
+    );
+    expect(result.status).toBe("ok");
+    expect(result.archived).toBe(3);
+    expect(result.destination).toBe("Archive");
+    expect(mockPool._moves.every((m) => m.to === "Archive")).toBe(true);
+  });
+
+  test("resolves uids via filter before archiving", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool({
+      archiveFolder: "Archive",
+      searchEmails: [makeEmail(10), makeEmail(11)],
+    });
+    const result = await batchArchive(
+      ctx,
+      { filter: { from: "newsletter@example.com" }, mailbox: "INBOX" },
+      { pool: mockPool },
+    );
+    expect(result.status).toBe("ok");
+    expect(result.archived).toBe(2);
+  });
+
+  test("throws when no archive folder exists", async () => {
+    const storage = createMemoryStorage();
+    await createAccountInStorage(storage, "user-1");
+    const ctx: ToolContext = { userId: "user-1", storage };
+
+    const mockPool = createMockPool();
+    await expect(
+      batchArchive(ctx, { uids: [1], mailbox: "INBOX" }, { pool: mockPool }),
+    ).rejects.toThrow("No Archive folder found");
   });
 });
 
